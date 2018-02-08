@@ -55,4 +55,4 @@ https://github.com/jdcrecur/swagger-chunk/tree/master/example
 
 ## Future thoughts
 - Use programmatically
-- Global install option
+- Cleaner error output for badly formed yml

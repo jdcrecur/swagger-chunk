@@ -1,7 +1,17 @@
 {
   "name": "swagger-chunk",
-  "version": "0.0.4",
-  "description": "Build swagger with managable chunks and write straight to disc in yaml, yml or json format.",
+  "version": "1.0.0",
+  "description": "Build and maintain large swagger API documentation files from small manageable chunks. Output yaml or json format."
+  "keywords" : [
+    "yaml",
+    "yml",
+    "merge yaml",
+    "merge yml",
+    "DDD",
+    "Documentation-Driven Development",
+    "swagger",
+    "swagger-codegen"
+  ],
   "main": "swagger-chunk.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,8 +20,8 @@
     "type": "git",
     "url": "git+https://github.com/jdcrecur/swagger-chunk.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "John Carmichael",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/jdcrecur/swagger-chunk/issues"
   },
