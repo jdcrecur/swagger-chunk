@@ -1,0 +1,12 @@
+{
+  "name": "Weather",
+  "description": "Generates an exmaple swagger from smaller chunks",
+  "scripts": {
+    "build": "node node_modules/swagger-chunk/merge.js -o yaml -e yml -i ./src/index.yml -D ./build/ -d weather_app_s2jsonapi"
+  },
+  "dependencies": {
+    "swagger-chunk": "0.0.4"
+  },
+  "author": "John Carmichael",
+  "license": "MIT"
+}

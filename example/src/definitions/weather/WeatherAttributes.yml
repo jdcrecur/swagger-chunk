@@ -1,0 +1,12 @@
+cloudCover:
+  type: string
+humidity:
+  type: number
+precipitation:
+  type: number
+temperature:
+  $ref: '#/definitions/UnitNumeric'
+windSpeed:
+  $ref: '#/definitions/UnitNumeric'
+windDirection:
+  $ref: '#/definitions/UnitNumeric'
