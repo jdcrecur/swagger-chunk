@@ -5,4 +5,18 @@ The output will automatically pickup the version number from the swagger file, o
 
 Currently this must be installed locally, a global package is on the way.
 
-Call `node node_modules/swagger-chunsk/merge.js --help` file with for how to use it.
+Call `node node_modules/swagger-chunk/merge.js --help` file with for how to use it.
+
+## Example use via the package.json
+```
+{
+  "name": "APISwagger",
+  "version": "0.5.1",
+  "scripts": {
+    "build:internet": "node node_modules/swagger-chunk/merge.js -o yaml -i ./src_internet/index.yml -D ./build/internet/ -d internet_swagger2_jsonapi -e yml",
+  },
+  "dependencies": {
+    "swagger-chunk": "0.0.2"
+  }
+}
+```
