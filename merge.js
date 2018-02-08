@@ -51,7 +51,15 @@ let options = {
   filter        : ['relative', 'remote'],
   loaderOptions : {
     processContent : function (res, callback) {
-      callback(null, YAML.safeLoad(res.text));
+      try {
+        let yml = YAML.safeLoad(res.text)
+        callback(null, YAML.safeLoad(res.text));
+      } catch (e) {
+        logErrorExit({
+          msg: 'Error parsing yml',
+          e:e
+        })
+      }
     }
   }
 };

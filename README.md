@@ -7,6 +7,8 @@ Currently this must be installed locally, a global package is on the way.
 
 Call `node node_modules/swagger-chunk/merge.js --help` file with for how to use it.
 
+Should the merger not be able to parse a chunk an error is thrown and process exits
+
 ## Example use via the package.json
 ```
 {

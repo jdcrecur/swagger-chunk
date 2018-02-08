@@ -1,6 +1,6 @@
 {
   "name": "swagger-chunk",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Build swagger with managable chunks and write straight to disc in yaml, yml or json format.",
   "main": "swagger-chunk.js",
   "scripts": {
