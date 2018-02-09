@@ -1,16 +1,16 @@
 {
   "name": "swagger-chunk",
-  "version": "1.0.0",
-  "description": "Build and maintain large swagger API documentation files from small manageable chunks. Output yaml or json format."
+  "version": "1.0.1",
+  "description": "Build and maintain large swagger API documentation files from small manageable chunks. Output yaml or json format.",
   "keywords" : [
+    "swagger",
+    "swagger-codegen",
     "yaml",
     "yml",
     "merge yaml",
     "merge yml",
     "DDD",
-    "Documentation-Driven Development",
-    "swagger",
-    "swagger-codegen"
+    "Documentation-Driven Development"
   ],
   "main": "swagger-chunk.js",
   "scripts": {

@@ -3,6 +3,10 @@
 ## Summary
 Build and maintain large swagger API documentation files from small manageable chunks. Perfect for [Documentation-Driven Development](https://gist.github.com/zsup/9434452), and when used in conjunction with [swagger-codegen](https://swagger.io/swagger-codegen/) makes for a powerful methodology to both start and maintain any project.
 
+## Examples
+
+For a full example please view the example folder within the swagger-chunk repo.: https://github.com/jdcrecur/swagger-chunk/tree/master/example
+
 ## How it works
 Using a combination of [json-refs](https://www.npmjs.com/package/json-refs) and [js-yaml](https://www.npmjs.com/package/js-yaml), [swagger-chunk](https://www.npmjs.com/package/swagger-chunk) combines multiple [YAML](http://yaml.org) files to output a single JSON or YAML file. 
 
@@ -22,7 +26,7 @@ Using [swagger-chunk](https://www.npmjs.com/package/swagger-chunk) you can use t
 ```
 npm i --save swagger-chunk
 ```
--  Running swagger-chunk and outputting the compiled contents to file: 
+-  Running swagger-chunk and outputting the compiled contents to file (typically you would add this to a script in your package.json file): 
 ```
 node node_modules/swagger-chunk -o yaml -e yml -i ./src/index.yml -D ./build/ -d weather_app_s2jsonapi
 ```
@@ -30,12 +34,6 @@ node node_modules/swagger-chunk -o yaml -e yml -i ./src/index.yml -D ./build/ -d
 ```
 node node_modules/swagger-chunk/merge.js --help
 ```
-
-## Examples
-
-For a full example please view the example folder within this repo.: 
-
-https://github.com/jdcrecur/swagger-chunk/tree/master/example
 
 ## Options for cli
 
