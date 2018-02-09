@@ -92,15 +92,9 @@ resolve(root, options).then(function (results) {
 
   let outputFilename = program.destination + program.destination_name + '_' + swagVersion + '.' + program.extension
 
-  fs.writeFile(outputFilename, resultObject, function (err) {
-    if (err) {
-      logErrorExit({
-        error : 'Error writing the to the output destination',
-        detail: err
-      })
-    }
-    else {
-      console.log('The file was saved!')
-    }
-  })
+  try{
+    fs.writeFileSync(outputFilename, resultObject)
+  } catch(e) {
+    logErrorExit(e)
+  }
 })
