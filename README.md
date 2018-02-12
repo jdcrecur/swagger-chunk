@@ -53,7 +53,7 @@ For an example use of the command line, please view the [example](https://github
 
 
 ## Use programmatically
-Command line use is essentially an abstraction to the actual SwaggerChunk class, all the parameters availble for cli are available via methods.
+Command line use is essentially an abstraction to the actual SwaggerChunk class, all the parameters available for cli are available via methods.
 
 You have the option to import the es6 class or the es5 commonJS module.
 
