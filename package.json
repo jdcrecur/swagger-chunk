@@ -13,7 +13,9 @@
     "Documentation-Driven Development"
   ],
   "main": "dist/SwaggerChunk.js",
-  "bin": "./bin/SwaggerChunk.js",
+  "bin": {
+    "swagger-chunk": "./bin/swagger-chunk.js"
+  },
   "scripts": {
     "build:es5": "./node_modules/.bin/babel src -d dist"
   },
