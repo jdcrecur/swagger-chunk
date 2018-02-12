@@ -4,7 +4,6 @@
 Build and maintain large swagger API documentation files from small manageable chunks. Perfect for [Documentation-Driven Development](https://gist.github.com/zsup/9434452), and when used in conjunction with [swagger-codegen](https://swagger.io/swagger-codegen/) makes for a powerful methodology to both start and maintain any project.
 
 ## Examples
-
 For a full example please view the example folder within the swagger-chunk repo.: https://github.com/jdcrecur/swagger-chunk/tree/master/example
 
 ## How it works
@@ -15,13 +14,12 @@ If you are familiar with [Swagger](https://swagger.io) then you will likely be f
  $ref: "#/definitions/Weather"
  ```
 
-Using [swagger-chunk](https://www.npmjs.com/package/swagger-chunk) you can use the `$ref` with a value not in quotes, this tells the parser to go and fetch the contents of the referenced file (any error in syntax or bad path will throw an error). This technique allows you to break up what would otherwise be potentially 1000's of lines into smaller re-usable chunks. For exmaple:
+Using [swagger-chunk](https://www.npmjs.com/package/swagger-chunk) you can use the `$ref` with a value not in quotes, this tells the parser to go and fetch the contents of the referenced file (any error in syntax or bad path will throw an error). This technique allows you to break up what would otherwise be potentially 1000's of lines into smaller re-usable chunks. For example:
  ```
  $ref: ./definitions/Weather.yml
  ```
 
 ## Install and use
-
 -  Installing: 
 ```
 npm i --save swagger-chunk
@@ -32,10 +30,13 @@ node node_modules/swagger-chunk -o yaml -e yml -i ./src/index.yml -D ./build/ -d
 ```
 -  List all the options available: 
 ```
-node node_modules/swagger-chunk/merge.js --help
+node node_modules/swagger-chunk --help
 ```
 
-## Options for cli
+## Command line use
+You can use swagger-chunk via command line, the following options are available, made easily possible by [commander](https://www.npmjs.com/package/commander)
+
+For an example use of the command line, please view the [example](https://github.com/jdcrecur/swagger-chunk/tree/master/example) `package.json` file.
 
 ```
   Options:
@@ -51,6 +52,11 @@ node node_modules/swagger-chunk/merge.js --help
 
 ```
 
+## Use programmatically
+Command line use is essentially an abstraction to the actual SwaggerChunk class, all the parameters availble for cli are available via methods.
+
+For an example use of the pragmatical use, please view the [example](https://github.com/jdcrecur/swagger-chunk/tree/master/example) `package.json` file.
+
 ## Future thoughts
-- Use programmatically
-- Cleaner error output for badly formed yml
+- Cleaner error output for badly formed yml.
+- Global installation option

@@ -2,10 +2,11 @@
   "name": "Weather",
   "description": "Generates an exmaple swagger from smaller chunks, the swagger version will be suffixed to the file name for versioning. See the swagger-chunk options for more info.",
   "scripts": {
-    "build": "node node_modules/swagger-chunk -o yaml -e yml -i ./src/index.yml -D ./build/ -d weather_app_s2jsonapi"
+    "build:by-cli": "node node_modules/swagger-chunk -o yaml -e yml -i ./src/index.yml -D ./build/ -d weather_app_s2jsonapi",
+    "build:by-programaticaly": "node exampleUse.js"
   },
   "dependencies": {
-    "swagger-chunk": "1.0.0"
+    "swagger-chunk": "1.1.0"
   },
   "author": "John Carmichael",
   "license": "MIT"
