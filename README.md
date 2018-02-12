@@ -1,7 +1,9 @@
 # swagger-chunk
 
 ## Summary
-Build and maintain large swagger API documentation files from small manageable chunks. Perfect for [Documentation-Driven Development](https://gist.github.com/zsup/9434452), and when used in conjunction with [swagger-codegen](https://swagger.io/swagger-codegen/) makes for a powerful methodology to both start and maintain any project.
+Swagger is becoming the defacto api documentation tool, swagger files though do have a tendency of growing wildly large and hard to maintain.
+
+Swagger-chunk allows you to build and maintain large swagger API documentation files from small manageable chunks, importing and re-using. Perfect for [Documentation-Driven Development](https://gist.github.com/zsup/9434452), and when used in conjunction with [swagger-codegen](https://swagger.io/swagger-codegen/) makes for a powerful methodology to both start and maintain any project.
 
 ## Examples
 For a full example please view the example folder within the swagger-chunk repo.: https://github.com/jdcrecur/swagger-chunk/tree/master/example
@@ -9,35 +11,30 @@ For a full example please view the example folder within the swagger-chunk repo.
 ## How it works
 Using a combination of [json-refs](https://www.npmjs.com/package/json-refs) and [js-yaml](https://www.npmjs.com/package/js-yaml), [swagger-chunk](https://www.npmjs.com/package/swagger-chunk) combines multiple [YAML](http://yaml.org) files to output a single JSON or YAML file. 
 
+Swagger-chunk will automatically extract the swagger version number from the parsed yml and append to the file name produced, helping ensure little confusion when publishing changes to your API swagger documentation.
+
 If you are familiar with [Swagger](https://swagger.io) then you will likely be familiar with the concept of definitions (or components in v3/OpenAPI) and referencing them with `$ref` with the value in single quotes prefixed with a # for example:
  ```
  $ref: "#/definitions/Weather"
  ```
 
-Using [swagger-chunk](https://www.npmjs.com/package/swagger-chunk) you can use the `$ref` with a value not in quotes, this tells the parser to go and fetch the contents of the referenced file (any error in syntax or bad path will throw an error). This technique allows you to break up what would otherwise be potentially 1000's of lines into smaller re-usable chunks. For example:
+Using [swagger-chunk](https://www.npmjs.com/package/swagger-chunk) you can use the `$ref` feature's value as a path to another yml file, swagger-chunk will try to fetch the contents of the path and inject into the file. This technique allows you to break up what would otherwise be potentially 1000's of lines into smaller re-usable chunks. For example:
  ```
  $ref: ./definitions/Weather.yml
  ```
 
-## Install and use
--  Installing: 
+## Install and use locally via cli
+Installing: 
 ```
 npm i --save swagger-chunk
 ```
--  Running swagger-chunk and outputting the compiled contents to file (typically you would add this to a script in your package.json file): 
+
+Running swagger-chunk and outputting the compiled contents to file (typically you would add this to a script in your package.json file): 
 ```
 node node_modules/swagger-chunk -o yaml -e yml -i ./src/index.yml -D ./build/ -d weather_app_s2jsonapi
 ```
--  List all the options available: 
-```
-node node_modules/swagger-chunk --help
-```
 
-## Command line use
-You can use swagger-chunk via command line, the following options are available, made easily possible by [commander](https://www.npmjs.com/package/commander)
-
-For an example use of the command line, please view the [example](https://github.com/jdcrecur/swagger-chunk/tree/master/example) `package.json` file.
-
+The following options are available, made easily possible by [commander](https://www.npmjs.com/package/commander)
 ```
   Options:
 
@@ -52,11 +49,26 @@ For an example use of the command line, please view the [example](https://github
 
 ```
 
+For an example use of the command line, please view the [example](https://github.com/jdcrecur/swagger-chunk/tree/master/example) `package.json` file.
+
+
 ## Use programmatically
-Command line use is essentially an abstraction to the actual SwaggerChunk class, all the parameters availble for cli are available via methods.
+Command line use is essentially an abstraction to the actual SwaggerChunk class, all the parameters available for cli are available via methods.
+
+You have the option to import the es6 class or the es5 commonJS module.
 
 For an example use of the pragmatical use, please view the [example](https://github.com/jdcrecur/swagger-chunk/tree/master/example) `package.json` file.
 
+
+## Globally installed command line
+You can optionally install and use swagger-chunk as a globally installed npm package, doing so is handy for lots of command line use. It is generally advised though to use a locally installed to the project version. This will prevent future updates breaking things.
+
+To install swagger-chunk globally:
+```
+npm install -g swagger-chunk
+```
+
+Using swagger chunk globally is just the same as from locally, for an example please view the [example](https://github.com/jdcrecur/swagger-chunk/tree/master/example) `package.json` file'd scripts.
+
 ## Future thoughts
 - Cleaner error output for badly formed yml.
-- Global installation option

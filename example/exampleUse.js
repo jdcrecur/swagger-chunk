@@ -1,4 +1,4 @@
-const SwaggerChunk = require('../dist/SwaggerChunk.js')
+const SwaggerChunk = require('../es5/SwaggerChunk.js')
 
 new SwaggerChunk({
   input: './src/index.yml'
