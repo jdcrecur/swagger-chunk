@@ -1,6 +1,6 @@
 {
   "name": "swagger-chunk",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Build and maintain large swagger API documentation files from small manageable chunks. Output yaml or json format.",
   "keywords": [
     "swagger",
@@ -13,11 +13,9 @@
     "Documentation-Driven Development"
   ],
   "main": "dist/SwaggerChunk.js",
-  "module": "dist/SwaggerChunk.mjs",
-  "jsnext:main": "dist/SwaggerChunk.mjs",
+  "bin": "./bin/SwaggerChunk.js",
   "scripts": {
-    "build": "rollup -c --environment BUILD:production",
-    "build:dev": "rollup -c"
+    "build:es5": "./node_modules/.bin/babel src -d dist"
   },
   "repository": {
     "type": "git",
@@ -39,8 +37,8 @@
     "js-yaml": "3.10.0"
   },
   "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babelrc-rollup": "^3.0.0",
-    "rollup-plugin-babel": "^3.0.3"
+    "babel-cli": "^6.26.0",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-preset-env": "^1.6.1"
   }
 }
