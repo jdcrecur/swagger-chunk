@@ -18,7 +18,7 @@
     "swagger-chunk": "./bin/swagger-chunk.js"
   },
   "scripts": {
-    "build:es5": "./node_modules/.bin/babel src -d dist"
+    "build:es5": "./node_modules/.bin/babel lib -d es5"
   },
   "repository": {
     "type": "git",

@@ -1,8 +1,9 @@
 const program      = require('commander')
-const SwaggerChunk = require('./dist/SwaggerChunk')
+const SwaggerChunk = require('./es5/SwaggerChunk')
+const pkg          = require('./package.json')
 
 program
-  .version('1.0.0', '-v, --version',)
+  .version(pkg.version, '-v, --version',)
   .option('-o, --output_format [format]', 'The output format yaml or json')
   .option('-i, --input [path]', 'The relative path to the input file')
   .option('-D, --destination [path]', 'Path to the target')

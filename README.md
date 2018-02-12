@@ -55,10 +55,12 @@ For an example use of the command line, please view the [example](https://github
 ## Use programmatically
 Command line use is essentially an abstraction to the actual SwaggerChunk class, all the parameters availble for cli are available via methods.
 
+You have the option to import the es6 class or the es5 commonJS module.
+
 For an example use of the pragmatical use, please view the [example](https://github.com/jdcrecur/swagger-chunk/tree/master/example) `package.json` file.
 
 
-## Command line use (globally installed)
+## Globally installed command line
 You can optionally install and use swagger-chunk as a globally installed npm package, doing so is handy for lots of command line use. It is generally advised though to use a locally installed to the project version. This will prevent future updates breaking things.
 
 To install swagger-chunk globally:
