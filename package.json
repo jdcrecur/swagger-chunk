@@ -1,6 +1,6 @@
 {
   "name": "swagger-chunk",
-  "version": "1.1.1",
+  "version": "1.1.6",
   "description": "Build and maintain large swagger API documentation files from small manageable chunks. Output yaml or json format.",
   "keywords": [
     "swagger",
@@ -13,12 +13,9 @@
     "DDD",
     "Documentation-Driven Development"
   ],
-  "main": "dist/SwaggerChunk.js",
-  "bin": {
-    "swagger-chunk": "./bin/swagger-chunk.js"
-  },
+  "main": "index.js",
   "scripts": {
-    "build:es5": "./node_modules/.bin/babel lib -d es5"
+    "build:es5": "./node_modules/.bin/babel es6 -d es5"
   },
   "repository": {
     "type": "git",
@@ -30,10 +27,6 @@
     "url": "https://github.com/jdcrecur/swagger-chunk/issues"
   },
   "homepage": "https://github.com/jdcrecur/swagger-chunk#readme",
-  "files": [
-    "lib",
-    "dist"
-  ],
   "dependencies": {
     "commander": "^2.14.1",
     "json-refs": "2.1.7",
