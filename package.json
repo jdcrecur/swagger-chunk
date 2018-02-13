@@ -17,7 +17,7 @@
   "scripts": {
     "build:es5": "./node_modules/.bin/babel es6 -d es5",
     "test": "NODE_ENV=TEST jest",
-    "prepublish": "npm run test"
+    "prepublish": "npm run test && npm run build:es5"
   },
   "repository": {
     "type": "git",

@@ -1,4 +1,4 @@
-import SwaggerChunk from '../SwaggerChunk'
+import SwaggerChunk from '../es6/SwaggerChunk'
 
 let SC
 
