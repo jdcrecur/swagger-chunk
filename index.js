@@ -9,6 +9,7 @@ program
   .option('-D, --destination [path]', 'Path to the target')
   .option('-d, --destination_name [name]', 'Base name of the file')
   .option('-e, --extension [ext]', 'The output extension, defaults to the output format if not provided.')
+  .option('-x, --exclude_version', '')
   .parse(process.argv)
 
 const a = new SwaggerChunk(program)

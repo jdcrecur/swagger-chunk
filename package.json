@@ -15,7 +15,9 @@
   ],
   "main": "index.js",
   "scripts": {
-    "build:es5": "./node_modules/.bin/babel es6 -d es5"
+    "build:es5": "./node_modules/.bin/babel es6 -d es5",
+    "test": "NODE_ENV=TEST jest",
+    "prepublish": "npm run test"
   },
   "repository": {
     "type": "git",
@@ -35,6 +37,7 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-plugin-add-module-exports": "^0.2.1",
-    "babel-preset-env": "^1.6.1"
+    "babel-preset-env": "^1.6.1",
+    "jest": "^22.3.0"
   }
 }

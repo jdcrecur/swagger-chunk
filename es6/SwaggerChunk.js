@@ -4,8 +4,14 @@ const path         = require('path')
 const resolveRefs  = require('json-refs').resolveRefs
 const YAML         = require('js-yaml')
 const logErrorExit = (e) => {
-  console.error('error', e)
-  process.exit()
+  if (process.env.NODE_ENV === 'TEST') {
+    console.log(process.cwd())
+    throw new Error(e)
+  }
+  else {
+    console.error('error', e)
+    process.exit()
+  }
 }
 
 export default class SwaggerChunk {
@@ -27,7 +33,7 @@ export default class SwaggerChunk {
       }
     }
     this.mainJSON      = ''
-    this.appendVersion = (!program.excludeVersion)
+    this.appendVersion = (program.exclude_version !== true)
     this.input         = program.input
   }
 
