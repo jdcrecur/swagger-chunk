@@ -14,8 +14,13 @@ var path = require('path');
 var resolveRefs = require('json-refs').resolveRefs;
 var YAML = require('js-yaml');
 var logErrorExit = function logErrorExit(e) {
-  console.error('error', e);
-  process.exit();
+  if (process.env.NODE_ENV === 'TEST') {
+    console.log(process.cwd());
+    throw new Error(e);
+  } else {
+    console.error('error', e);
+    process.exit();
+  }
 };
 
 var SwaggerChunk = function () {
@@ -32,10 +37,6 @@ var SwaggerChunk = function () {
 
     _classCallCheck(this, SwaggerChunk);
 
-
-    this.mainJSON = '';
-    this.appendVersion = (program.exclude_version !== true);
-    console.log(this.appendVersion)
     if (!program.input) {
       logErrorExit('No input provided');
     } else {
@@ -43,6 +44,8 @@ var SwaggerChunk = function () {
         logErrorExit('File does not exist. (' + program.input + ')');
       }
     }
+    this.mainJSON = '';
+    this.appendVersion = program.exclude_version !== true;
     this.input = program.input;
   }
 
