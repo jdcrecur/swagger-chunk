@@ -32,6 +32,10 @@ var SwaggerChunk = function () {
 
     _classCallCheck(this, SwaggerChunk);
 
+
+    this.mainJSON = '';
+    this.appendVersion = (program.exclude_version !== true);
+    console.log(this.appendVersion)
     if (!program.input) {
       logErrorExit('No input provided');
     } else {
@@ -39,8 +43,6 @@ var SwaggerChunk = function () {
         logErrorExit('File does not exist. (' + program.input + ')');
       }
     }
-    this.mainJSON = '';
-    this.appendVersion = !program.excludeVersion;
     this.input = program.input;
   }
 
