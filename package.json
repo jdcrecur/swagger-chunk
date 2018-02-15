@@ -1,6 +1,6 @@
 {
   "name": "swagger-chunk",
-  "version": "1.1.9",
+  "version": "1.1.10",
   "description": "Build and maintain large swagger API documentation files from small manageable chunks. Output yaml or json format.",
   "keywords": [
     "swagger",
@@ -16,7 +16,6 @@
   "main": "index.js",
   "scripts": {
     "install:githooks": "cp ./githooks/* .git/hooks",
-    "preinstall": "npm run install:githooks",
     "build:es5": "./node_modules/.bin/babel es6 -d es5",
     "lint": "eslint *.js es6/",
     "test": "NODE_ENV=TEST jest",
