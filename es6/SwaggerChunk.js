@@ -114,11 +114,11 @@ export default class SwaggerChunk {
     }
   }
 
-  toJsonFile (dir, name, ext) {
+  toJsonFile (dir, name, ext, indentation = 2) {
     ext = ext || 'json'
     return new Promise((resolve, reject) => {
       this.toJSON().then((json) => {
-        this.writeFile(dir, name, ext, JSON.stringify(json))
+        this.writeFile(dir, name, ext, JSON.stringify(json, null, indentation))
         resolve('File written to: ' + path.join(dir, this.getFileName(name, ext)))
       }).catch(reject)
     })
