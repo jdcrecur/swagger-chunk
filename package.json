@@ -1,6 +1,6 @@
 {
   "name": "swagger-chunk",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "description": "Build and maintain large swagger API documentation files from small manageable chunks. Output yaml or json format.",
   "keywords": [
     "swagger",
