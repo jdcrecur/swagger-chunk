@@ -1,6 +1,6 @@
 {
   "name": "swagger-chunk",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "Build and maintain large swagger API documentation files from small manageable chunks. Output yaml or json format.",
   "keywords": [
     "swagger",
@@ -15,7 +15,10 @@
   ],
   "main": "index.js",
   "scripts": {
+    "install:githooks": "cp ./githooks/* .git/hooks",
+    "preinstall": "npm run install:githooks",
     "build:es5": "./node_modules/.bin/babel es6 -d es5",
+    "lint": "eslint *.js es6/",
     "test": "NODE_ENV=TEST jest",
     "prepublish": "npm run test && npm run build:es5"
   },
@@ -36,8 +39,14 @@
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-eslint": "^7.2.3",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-preset-env": "^1.6.1",
-    "jest": "^22.3.0"
+    "jest": "^22.3.0",
+    "eslint": "^3.7.1",
+    "eslint-config-standard": "^7.0.0",
+    "eslint-loader": "^1.8.0",
+    "eslint-plugin-promise": "^3.4.0",
+    "eslint-plugin-standard": "^2.0.1"
   }
 }

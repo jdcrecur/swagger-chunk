@@ -134,10 +134,12 @@ var SwaggerChunk = function () {
     value: function toJsonFile(dir, name, ext) {
       var _this2 = this;
 
+      var indentation = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 2;
+
       ext = ext || 'json';
       return new Promise(function (resolve, reject) {
         _this2.toJSON().then(function (json) {
-          _this2.writeFile(dir, name, ext, JSON.stringify(json));
+          _this2.writeFile(dir, name, ext, JSON.stringify(json, null, indentation));
           resolve('File written to: ' + path.join(dir, _this2.getFileName(name, ext)));
         }).catch(reject);
       });
