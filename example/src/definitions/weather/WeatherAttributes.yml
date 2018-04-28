@@ -5,8 +5,8 @@ humidity:
 precipitation:
   type: number
 temperature:
-  $ref: '#/definitions/UnitNumeric'
+  $ref: '#/definitions/UnitNumericAttributes'
 windSpeed:
-  $ref: '#/definitions/UnitNumeric'
+  $ref: '#/definitions/UnitNumericAttributes'
 windDirection:
-  $ref: '#/definitions/UnitNumeric'
+  $ref: '#/definitions/UnitNumericAttributes'

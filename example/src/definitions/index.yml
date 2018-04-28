@@ -1,5 +1,5 @@
 Weather:
   $ref: ./weather/Weather.yml
 
-UnitNumeric:
-  $ref: ./unit/UnitNumeric.yml
+UnitNumericAttributes:
+  $ref: ./unit/UnitNumericAttributes.yml
