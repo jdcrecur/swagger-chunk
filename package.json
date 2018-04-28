@@ -1,7 +1,7 @@
 {
   "name": "swagger-chunk",
-  "version": "1.1.10",
-  "description": "Build and maintain large swagger API documentation files from small manageable chunks. Output yaml or json format.",
+  "version": "1.2.1",
+  "description": "Build and maintain large swagger API documentation files from small manageable chunks. Output yaml or json format. Instal skeleton swagger-chunk via command line --init",
   "keywords": [
     "swagger",
     "swagger-codegen",
@@ -14,6 +14,9 @@
     "Documentation-Driven Development"
   ],
   "main": "index.js",
+  "bin": {
+    "swagger-chunk": "./bin/swagger-chunk.js"
+  },
   "scripts": {
     "install:githooks": "cp ./githooks/* .git/hooks",
     "build:es5": "./node_modules/.bin/babel es6 -d es5",
@@ -32,20 +35,17 @@
   },
   "homepage": "https://github.com/jdcrecur/swagger-chunk#readme",
   "dependencies": {
-    "commander": "^2.14.1",
-    "json-refs": "2.1.7",
-    "js-yaml": "3.10.0"
+    "commander": "^2.15.1",
+    "fs-extra": "^5.0.0",
+    "inquirer": "^5.2.0",
+    "js-yaml": "^3.11.0",
+    "json-refs": "^3.0.4"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-eslint": "^7.2.3",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-preset-env": "^1.6.1",
-    "jest": "^22.3.0",
-    "eslint": "^3.7.1",
-    "eslint-config-standard": "^7.0.0",
-    "eslint-loader": "^1.8.0",
-    "eslint-plugin-promise": "^3.4.0",
-    "eslint-plugin-standard": "^2.0.1"
+    "jest": "^22.4.3"
   }
 }
