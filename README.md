@@ -45,6 +45,7 @@ The following options are available, made easily possible by [commander](https:/
     -d, --destination_name [name]  Base name of the file
     -V, --Version [version]        The version of the file added to the file name as a suffix, defaults to the version set in the swagger file, if not then the package.json version, else an error is thrown.
     -e, --extension [ext]          The output extension, defaults to the output format if not provided.
+    --init                         Inject a skeleton yml structure to the current directory named /src/...    
     -h, --help                     output usage information
 
 ```
@@ -69,6 +70,19 @@ npm install -g swagger-chunk
 ```
 
 Using swagger chunk globally is just the same as from locally, for an example please view the [example](https://github.com/jdcrecur/swagger-chunk/tree/master/example) `package.json` file'd scripts.
+
+## Install skeleton swagger-chunk files
+You can kick start your swagger documentation code base by running the below command. The command will result in a new sub directory from the `current working directory` the command is run from:
+
+From locally installed:
+```
+node node_modules/swagger-chunk --init
+```
+
+From globally installed:
+```
+swagger-chunk --init
+```
 
 ## Future thoughts
 - Cleaner error output for badly formed yml.

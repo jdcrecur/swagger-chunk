@@ -1,0 +1,6 @@
+.project
+.settings
+.npmignore
+.eslintrc
+.idea/
+__tests__/
