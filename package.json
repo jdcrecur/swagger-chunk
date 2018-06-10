@@ -1,7 +1,7 @@
 {
   "name": "swagger-chunk",
-  "version": "1.3.0",
-  "description": "Build and maintain large swagger API documentation files from small manageable chunks. Output yaml or json format. Instal skeleton swagger-chunk via command line --init",
+  "version": "1.4.0",
+  "description": "Build and maintain large swagger API documentation files from small manageable chunks. Output yaml or json format. Instal skeleton swagger-chunk & scripts via command line --init",
   "keywords": [
     "swagger",
     "swagger-codegen",
