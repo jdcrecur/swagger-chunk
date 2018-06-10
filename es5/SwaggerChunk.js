@@ -15,7 +15,7 @@ var resolveRefs = require('json-refs').resolveRefs;
 var YAML = require('js-yaml');
 var logErrorExit = function logErrorExit(e) {
   if (process.env.NODE_ENV === 'TEST') {
-    console.log(process.cwd());
+    console.log(process.cwd(), e);
     throw new Error(e);
   } else {
     console.error('error', e);
@@ -71,7 +71,7 @@ var SwaggerChunk = function () {
       return new Promise(function (resolve, reject) {
         var root = YAML.safeLoad(fs.readFileSync(_this.input).toString());
         var options = {
-          filter: ['relative', 'remote'],
+          //filter: ['relative', 'remote'],
           loaderOptions: {
             processContent: function processContent(res, callback) {
               try {
@@ -87,12 +87,35 @@ var SwaggerChunk = function () {
         };
 
         resolveRefs(root, options).then(function (results) {
-          _this.mainJSON = results.resolved;
+          _this.mainJSON = _this.swaggerChunkConversions(results.resolved);
           return resolve(_this.mainJSON);
         }).catch(function (e) {
           return reject(e);
         });
       });
+    }
+  }, {
+    key: 'swaggerChunkConversions',
+    value: function swaggerChunkConversions(swaggerDocument) {
+      // Iterate over all paths and inject the rel. sec defs.
+      for (var _path in swaggerDocument.paths) {
+        for (var method in swaggerDocument.paths[_path]) {
+          // Check is the method is allOff
+          if (method === 'allOf') {
+            (function () {
+              var newObj = {};
+              swaggerDocument.paths[_path][method].forEach(function (item) {
+                for (var verb in item) {
+                  // console.log(item)
+                  newObj[verb] = item[verb];
+                }
+              });
+              swaggerDocument.paths[_path] = newObj;
+            })();
+          }
+        }
+      }
+      return swaggerDocument;
     }
   }, {
     key: 'getVersion',
@@ -175,6 +198,7 @@ var SwaggerChunk = function () {
 
       return new Promise(function (resolve, reject) {
         _this5.parseMain().then(function (json) {
+          // fix the allOff in paths
           return resolve(YAML.safeDump(json));
         }).catch(reject);
       });

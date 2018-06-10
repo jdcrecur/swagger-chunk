@@ -24,7 +24,7 @@ describe('Load the construct', () => {
   it('should not fail with a simple import point and exclude_version', (done) => {
     tryOrFail(() => {
       SC = new SwaggerChunk({
-        input          : './example/src/index.yml',
+        input: './example/src/index.yml',
         exclude_version: true
       })
     }, done)
@@ -40,24 +40,5 @@ describe('Load the construct', () => {
     catch (e) {
       done()
     }
-  })
-})
-
-describe('Read to JSON', () => {
-  SC = new SwaggerChunk({
-    input          : './example/src/index.yml',
-    exclude_version: true
-  })
-
-  it('Read the yml to JSON', (done) => {
-    SC.toJSON().then((json) => {
-      if( json.info.version === '1.1.1'){
-        done()
-      } else {
-        done('Wrong number found')
-      }
-    }).catch((e) => {
-      done(e)
-    })
   })
 })

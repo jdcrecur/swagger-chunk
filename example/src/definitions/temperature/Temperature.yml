@@ -1,0 +1,14 @@
+type: object
+properties:
+  data:
+    type: array
+    items:
+      title: Temp
+      type: object
+      properties:
+        type:
+          type: string
+        id:
+          type: string
+        attributes:
+          $ref: ./TemperatureAttributes.yml

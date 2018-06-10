@@ -1,11 +1,11 @@
-const program      = require('commander')
-const fs           = require('fs')
-const path         = require('path')
-const resolveRefs  = require('json-refs').resolveRefs
-const YAML         = require('js-yaml')
+const program = require('commander')
+const fs = require('fs')
+const path = require('path')
+const resolveRefs = require('json-refs').resolveRefs
+const YAML = require('js-yaml')
 const logErrorExit = (e) => {
   if (process.env.NODE_ENV === 'TEST') {
-    console.log(process.cwd())
+    console.log(process.cwd(), e)
     throw new Error(e)
   }
   else {
@@ -32,9 +32,9 @@ export default class SwaggerChunk {
         logErrorExit('File does not exist. (' + program.input + ')')
       }
     }
-    this.mainJSON      = ''
+    this.mainJSON = ''
     this.appendVersion = (program.exclude_version !== true)
-    this.input         = program.input
+    this.input = program.input
   }
 
   readJsonFile (file) {
@@ -52,18 +52,18 @@ export default class SwaggerChunk {
 
   parseMain () {
     return new Promise((resolve, reject) => {
-      const root    = YAML.safeLoad(fs.readFileSync(this.input).toString())
+      const root = YAML.safeLoad(fs.readFileSync(this.input).toString())
       const options = {
-        filter       : ['relative', 'remote'],
+        //filter: ['relative', 'remote'],
         loaderOptions: {
-          processContent: function (res, callback) {
+          processContent: (res, callback) => {
             try {
               callback(null, YAML.safeLoad(res.text))
             }
             catch (e) {
               logErrorExit({
                 msg: 'Error parsing yml',
-                e  : e
+                e: e
               })
             }
           }
@@ -71,12 +71,32 @@ export default class SwaggerChunk {
       }
 
       resolveRefs(root, options).then((results) => {
-        this.mainJSON = results.resolved
+        this.mainJSON = this.swaggerChunkConversions( results.resolved )
         return resolve(this.mainJSON)
       }).catch((e) => {
         return reject(e)
       })
     })
+  }
+
+  swaggerChunkConversions (swaggerDocument) {
+    // Iterate over all paths and inject the rel. sec defs.
+    for (let path in swaggerDocument.paths) {
+      for (let method in swaggerDocument.paths[path]) {
+        // Check is the method is allOff
+        if (method === 'allOf') {
+          let newObj = {}
+          swaggerDocument.paths[path][method].forEach((item) => {
+            for (let verb in item) {
+              // console.log(item)
+              newObj[verb] = item[verb]
+            }
+          })
+          swaggerDocument.paths[path] = newObj
+        }
+      }
+    }
+    return swaggerDocument
   }
 
   getVersion () {
@@ -145,6 +165,7 @@ export default class SwaggerChunk {
   toYAML () {
     return new Promise((resolve, reject) => {
       this.parseMain().then((json) => {
+        // fix the allOff in paths
         return resolve(YAML.safeDump(json))
       }).catch(reject)
     })

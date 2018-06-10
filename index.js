@@ -14,34 +14,10 @@ program
   .parse(process.argv)
 
 if (program.init) {
-  const inquirer = require('inquirer')
-  const fs = require('fs-extra')
-  const pwd = process.cwd()
-  const srcAlreadyExists = fs.pathExistsSync(pwd + '/src')
-  if (srcAlreadyExists) {
-    console.error('Process stopped as ' + pwd + '/src already found! Please double check you want to run this command here.')
-    process.exit(0)
-  } else {
-    inquirer.prompt([{
-      type: 'confirm',
-      name: 'install_confirm',
-      message: 'Install a swagger-chunk skeleton to this directory?',
-      default: false
-    }]).then((answers) => {
-      if( answers.install_confirm ){
-        fs.copy(__dirname + '/example/src', pwd + '/src', function (err) {
-          if( err ){
-            console.log( err )
-          }else {
-            console.log('Complete.')
-          }
-        });
-      }
-    })
-  }
+  return require('./init')
 } else {
-  const a = new SwaggerChunk(program)
-  a[(program.output_format === 'yaml') ? 'toYamlFile' : 'toJsonFile'](
+  const swaggerChunk = new SwaggerChunk(program)
+  swaggerChunk[(program.output_format === 'yaml') ? 'toYamlFile' : 'toJsonFile'](
     program.destination,
     program.destination_name,
     program.extension || false

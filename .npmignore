@@ -1,6 +1,11 @@
 .project
 .settings
 .npmignore
+.babelrc
 .eslintrc
 .idea/
 __tests__/
+es6/
+githooks/
+example/build
+!example/build/.gitignore

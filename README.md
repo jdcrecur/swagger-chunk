@@ -23,6 +23,35 @@ Using [swagger-chunk](https://www.npmjs.com/package/swagger-chunk) you can use t
  $ref: ./definitions/Weather.yml
  ```
 
+## Joining multiple paths
+
+Swagger/OpenAPI definition does not allow paths to be merged from an array using the allOf keywords. For example the folowoing will fail:
+```
+/event/{eventId}/contests/:
+
+  allOf:
+
+    - $ref: ./contests/index.read.yml
+
+    - $ref: ./contests/index.write.yml
+```
+
+However, using swagger-chunk you can. The above will automatically fetch and inject the contents into paths leaving the above looking like:
+```
+/event/{eventId}/contests/:
+    get:
+        .... content
+    post:
+        .... content
+    put:
+        .... content
+    delete:
+        .... content
+```
+
+This allows you to share resource in your swagger-chunk repo.
+
+
 ## Install and use locally via cli
 Installing: 
 ```
