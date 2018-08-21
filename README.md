@@ -1,5 +1,21 @@
 # swagger-chunk
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Summary](#summary)
+- [Examples](#examples)
+- [How it works](#how-it-works)
+- [Joining multiple paths](#joining-multiple-paths)
+- [Overriding the base host](#overriding-the-base-host)
+- [Install and use locally via cli](#install-and-use-locally-via-cli)
+- [Install skeleton swagger-chunk files](#install-skeleton-swagger-chunk-files)
+- [Use programmatically](#use-programmatically)
+- [Future thoughts](#future-thoughts)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Summary
 Swagger is becoming the defacto api documentation tool, swagger files though do have a tendency of growing wildly large and hard to maintain.
 
@@ -51,6 +67,9 @@ However, using swagger-chunk you can. The above will automatically fetch and inj
 
 This allows you to share resource in your swagger-chunk repo.
 
+## Overriding the base host
+Swagger 2 only offers the option to insert a single host, unlike OpenApi3. To bypass the restriction you can override the host using swagger-chunk by passing in the -h flag. This will replace the host found in the swagger source with that passed.
+
 
 ## Install and use locally via cli
 Installing: 
@@ -65,6 +84,8 @@ node node_modules/swagger-chunk -o yaml -e yml -i ./src/index.yml -D ./build/ -d
 
 The following options are available, made easily possible by [commander](https://www.npmjs.com/package/commander)
 ```
+  Usage: index [options]
+
   Options:
 
     -v, --version                  output the version number
@@ -72,9 +93,11 @@ The following options are available, made easily possible by [commander](https:/
     -i, --input [path]             The relative path to the input file
     -D, --destination [path]       Path to the target
     -d, --destination_name [name]  Base name of the file
-    -V, --Version [version]        The version of the file added to the file name as a suffix, defaults to the version set in the swagger file, if not then the package.json version, else an error is thrown.
+    -h, --host_replacement [name]  (swagger2 specific only) A host name string to replace the one found in the source
     -e, --extension [ext]          The output extension, defaults to the output format if not provided.
-    --init                         Inject a skeleton yml structure to the current directory named /src, package.json scripts as well as the build folder with gitignore.    
+    -x, --exclude_version          
+    -c, --clean_leaf               This will strip all trailing "," from all values
+    --init                         Inject a skeleton yml structure to the current directory named /src/...
     -h, --help                     output usage information
 
 ```

@@ -4,12 +4,14 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var program = require('commander');
-var fs = require('fs');
+var fs = require('fs-extra');
 var path = require('path');
 var resolveRefs = require('json-refs').resolveRefs;
 var YAML = require('js-yaml');
@@ -47,6 +49,8 @@ var SwaggerChunk = function () {
     this.mainJSON = '';
     this.appendVersion = program.exclude_version !== true;
     this.input = program.input;
+    this.hostReplacement = program.host_replacement || false;
+    this.cleanLeaf = program.clean_leaf || false;
   }
 
   _createClass(SwaggerChunk, [{
@@ -115,6 +119,36 @@ var SwaggerChunk = function () {
           }
         }
       }
+      if (this.hostReplacement) {
+        swaggerDocument.host = this.hostReplacement;
+      }
+      if (this.cleanLeaf) {
+        swaggerDocument = this.cleanLeafs(swaggerDocument);
+      }
+      return swaggerDocument;
+    }
+  }, {
+    key: 'lastChar',
+    value: function lastChar(string) {
+      return string[string.length - 1];
+    }
+  }, {
+    key: 'removeLastChar',
+    value: function removeLastChar(str) {
+      return str.slice(0, -1);
+    }
+  }, {
+    key: 'cleanLeafs',
+    value: function cleanLeafs(swaggerDocument) {
+      for (var key in swaggerDocument) {
+        if (_typeof(swaggerDocument[key]) === 'object') {
+          swaggerDocument[key] = this.cleanLeafs(swaggerDocument[key]);
+        } else {
+          if (this.lastChar(swaggerDocument[key]) === ',') {
+            swaggerDocument[key] = this.removeLastChar(swaggerDocument[key]);
+          }
+        }
+      }
       return swaggerDocument;
     }
   }, {
@@ -147,6 +181,7 @@ var SwaggerChunk = function () {
     key: 'writeFile',
     value: function writeFile(dir, name, ext, contents) {
       try {
+        fs.ensureDirSync(dir);
         return fs.writeFileSync(path.join(dir, this.getFileName(name, ext)), contents);
       } catch (e) {
         throw e;

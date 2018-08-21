@@ -1,5 +1,5 @@
 const program = require('commander')
-const fs = require('fs')
+const fs = require('fs-extra')
 const path = require('path')
 const resolveRefs = require('json-refs').resolveRefs
 const YAML = require('js-yaml')
@@ -35,6 +35,8 @@ export default class SwaggerChunk {
     this.mainJSON = ''
     this.appendVersion = (program.exclude_version !== true)
     this.input = program.input
+    this.hostReplacement = program.host_replacement || false
+    this.cleanLeaf = program.clean_leaf || false
   }
 
   readJsonFile (file) {
@@ -71,7 +73,7 @@ export default class SwaggerChunk {
       }
 
       resolveRefs(root, options).then((results) => {
-        this.mainJSON = this.swaggerChunkConversions( results.resolved )
+        this.mainJSON = this.swaggerChunkConversions(results.resolved)
         return resolve(this.mainJSON)
       }).catch((e) => {
         return reject(e)
@@ -93,6 +95,33 @@ export default class SwaggerChunk {
             }
           })
           swaggerDocument.paths[path] = newObj
+        }
+      }
+    }
+    if (this.hostReplacement) {
+      swaggerDocument.host = this.hostReplacement
+    }
+    if (this.cleanLeaf) {
+      swaggerDocument = this.cleanLeafs(swaggerDocument)
+    }
+    return swaggerDocument
+  }
+
+  lastChar (string) {
+    return string[string.length - 1]
+  }
+
+  removeLastChar (str) {
+    return str.slice(0, -1)
+  }
+
+  cleanLeafs (swaggerDocument) {
+    for (let key in swaggerDocument) {
+      if (typeof swaggerDocument[key] === 'object') {
+        swaggerDocument[key] = this.cleanLeafs(swaggerDocument[key])
+      } else {
+        if (this.lastChar(swaggerDocument[key]) === ',') {
+          swaggerDocument[key] = this.removeLastChar(swaggerDocument[key])
         }
       }
     }
@@ -127,6 +156,7 @@ export default class SwaggerChunk {
 
   writeFile (dir, name, ext, contents) {
     try {
+      fs.ensureDirSync(dir)
       return fs.writeFileSync(path.join(dir, this.getFileName(name, ext)), contents)
     }
     catch (e) {
