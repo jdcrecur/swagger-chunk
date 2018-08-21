@@ -1,5 +1,21 @@
 # swagger-chunk
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Summary](#summary)
+- [Examples](#examples)
+- [How it works](#how-it-works)
+- [Joining multiple paths](#joining-multiple-paths)
+- [Overriding the base host](#overriding-the-base-host)
+- [Install and use locally via cli](#install-and-use-locally-via-cli)
+- [Install skeleton swagger-chunk files](#install-skeleton-swagger-chunk-files)
+- [Use programmatically](#use-programmatically)
+- [Future thoughts](#future-thoughts)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Summary
 Swagger is becoming the defacto api documentation tool, swagger files though do have a tendency of growing wildly large and hard to maintain.
 
@@ -23,6 +39,38 @@ Using [swagger-chunk](https://www.npmjs.com/package/swagger-chunk) you can use t
  $ref: ./definitions/Weather.yml
  ```
 
+## Joining multiple paths
+
+Swagger/OpenAPI definition does not allow paths to be merged from an array using the allOf keywords. For example the folowoing will fail:
+```
+/event/{eventId}/contests/:
+
+  allOf:
+
+    - $ref: ./contests/index.read.yml
+
+    - $ref: ./contests/index.write.yml
+```
+
+However, using swagger-chunk you can. The above will automatically fetch and inject the contents into paths leaving the above looking like:
+```
+/event/{eventId}/contests/:
+    get:
+        .... content
+    post:
+        .... content
+    put:
+        .... content
+    delete:
+        .... content
+```
+
+This allows you to share resource in your swagger-chunk repo.
+
+## Overriding the base host
+Swagger 2 only offers the option to insert a single host, unlike OpenApi3. To bypass the restriction you can override the host using swagger-chunk by passing in the -h flag. This will replace the host found in the swagger source with that passed.
+
+
 ## Install and use locally via cli
 Installing: 
 ```
@@ -36,6 +84,8 @@ node node_modules/swagger-chunk -o yaml -e yml -i ./src/index.yml -D ./build/ -d
 
 The following options are available, made easily possible by [commander](https://www.npmjs.com/package/commander)
 ```
+  Usage: index [options]
+
   Options:
 
     -v, --version                  output the version number
@@ -43,33 +93,16 @@ The following options are available, made easily possible by [commander](https:/
     -i, --input [path]             The relative path to the input file
     -D, --destination [path]       Path to the target
     -d, --destination_name [name]  Base name of the file
-    -V, --Version [version]        The version of the file added to the file name as a suffix, defaults to the version set in the swagger file, if not then the package.json version, else an error is thrown.
+    -h, --host_replacement [name]  (swagger2 specific only) A host name string to replace the one found in the source
     -e, --extension [ext]          The output extension, defaults to the output format if not provided.
-    --init                         Inject a skeleton yml structure to the current directory named /src/...    
+    -x, --exclude_version          
+    -c, --clean_leaf               This will strip all trailing "," from all values
+    --init                         Inject a skeleton yml structure to the current directory named /src/...
     -h, --help                     output usage information
 
 ```
 
 For an example use of the command line, please view the [example](https://github.com/jdcrecur/swagger-chunk/tree/master/example) `package.json` file.
-
-
-## Use programmatically
-Command line use is essentially an abstraction to the actual SwaggerChunk class, all the parameters available for cli are available via methods.
-
-You have the option to import the es6 class or the es5 commonJS module.
-
-For an example use of the pragmatical use, please view the [example](https://github.com/jdcrecur/swagger-chunk/tree/master/example) `package.json` file.
-
-
-## Globally installed command line
-You can optionally install and use swagger-chunk as a globally installed npm package, doing so is handy for lots of command line use. It is generally advised though to use a locally installed to the project version. This will prevent future updates breaking things.
-
-To install swagger-chunk globally:
-```
-npm install -g swagger-chunk
-```
-
-Using swagger chunk globally is just the same as from locally, for an example please view the [example](https://github.com/jdcrecur/swagger-chunk/tree/master/example) `package.json` file'd scripts.
 
 ## Install skeleton swagger-chunk files
 You can kick start your swagger documentation code base by running the below command. The command will result in a new sub directory from the `current working directory` the command is run from:
@@ -79,10 +112,13 @@ From locally installed:
 node node_modules/swagger-chunk --init
 ```
 
-From globally installed:
-```
-swagger-chunk --init
-```
+## Use programmatically
+Command line use is essentially an abstraction to the actual SwaggerChunk class, all the parameters available for cli are available via methods.
+
+You have the option to import the es6 class or the es5 commonJS module.
+
+For an example use of the pragmatical use, please view the [example](https://github.com/jdcrecur/swagger-chunk/tree/master/example) `package.json` file.
+
 
 ## Future thoughts
 - Cleaner error output for badly formed yml.

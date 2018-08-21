@@ -1,3 +1,6 @@
+Temperature:
+  $ref: ./temperature/Temperature.yml
+
 Weather:
   $ref: ./weather/Weather.yml
 

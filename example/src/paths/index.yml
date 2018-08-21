@@ -1,3 +1,0 @@
-# Weather
-/weather/{country}:
-  $ref: ./weather/index.yml

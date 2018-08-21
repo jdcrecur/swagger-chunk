@@ -7,11 +7,11 @@ get:
   produces:
   - "application/json"
   parameters:
-    - in: path
-      name: country
-      description: ISO "ALPHA-2 Code"
-      required: true
-      type: string
+    - in: path,
+      name: country,
+      description: ISO "ALPHA-2 Code",
+      required: true,
+      type: string,
   responses:
     "200":
       description: Successful fecth

@@ -1,3 +1,4 @@
 # Ignore these files
 node_modules/
-.idea/workspace.xml
+.idea
+example/build/
