@@ -9,6 +9,7 @@
 - [How it works](#how-it-works)
 - [Joining multiple paths](#joining-multiple-paths)
 - [Overriding the base host](#overriding-the-base-host)
+- [Clean up leaf values](#clean-up-leaf-values)
 - [Install and use locally via cli](#install-and-use-locally-via-cli)
 - [Install skeleton swagger-chunk files](#install-skeleton-swagger-chunk-files)
 - [Use programmatically](#use-programmatically)
@@ -70,6 +71,8 @@ This allows you to share resource in your swagger-chunk repo.
 ## Overriding the base host
 Swagger 2 only offers the option to insert a single host, unlike OpenApi3. To bypass the restriction you can override the host using swagger-chunk by passing in the -h flag. This will replace the host found in the swagger source with that passed.
 
+## Clean up leaf values
+On occasion you may find yourself importing yaml from a 3rd party converter which can sometimes result in trialing commas. You can automatically strip these from the final output by passing the `-c` flag for `--clean_leaf`
 
 ## Install and use locally via cli
 Installing: 
