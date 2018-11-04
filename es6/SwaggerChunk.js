@@ -73,12 +73,15 @@ export default class SwaggerChunk {
           }
         }
       }
-
+      const pwd = process.cwd()
+      process.chdir(path.dirname(this.input))
       resolveRefs(root, options).then((results) => {
         this.mainJSON = this.swaggerChunkConversions(results.resolved)
         this.validate()
+        process.chdir(pwd)
         return resolve(this.mainJSON)
       }).catch((e) => {
+        process.chdir(pwd)
         return reject(e)
       })
     })

@@ -20,14 +20,14 @@ paths:
         - weather
       summary: Weather data
       description: Weather for a given country for a given `ISO ALPHA-2 Code'
-      operationId: weatherShow
+      operationId: v1WeatherGet
       produces:
         - application/json
       parameters:
         - in: path
           name: country
           description: ISO "ALPHA-2 Code"
-          required: 'true'
+          required: true
           type: string
       responses:
         '200':
@@ -42,7 +42,7 @@ paths:
         - temperature
       summary: Temperature data
       description: Get the latest temperature
-      operationId: temperatureLatestShow
+      operationId: v1TemperatureGet
       produces:
         - application/json
       responses:
@@ -57,7 +57,7 @@ paths:
         - temperature
       summary: Temperature data
       description: Create a new temperature record.
-      operationId: temperatureLatestShow
+      operationId: v1TemperaturePost
       produces:
         - application/json
       parameters:
@@ -82,47 +82,25 @@ definitions:
   Temperature:
     type: object
     properties:
-      data:
-        type: array
-        items:
-          title: Temp
-          type: object
-          properties:
-            type:
-              type: string
-            id:
-              type: string
-            attributes:
-              degrees:
-                type: string
-              date:
-                type: string
+      degrees:
+        type: string
+      date:
+        type: string
   Weather:
     type: object
     properties:
-      data:
-        type: array
-        items:
-          title: Weather
-          type: object
-          properties:
-            type:
-              type: string
-            id:
-              type: string
-            attributes:
-              cloudCover:
-                type: string
-              humidity:
-                type: number
-              precipitation:
-                type: number
-              temperature:
-                $ref: '#/definitions/UnitNumericAttributes'
-              windSpeed:
-                $ref: '#/definitions/UnitNumericAttributes'
-              windDirection:
-                $ref: '#/definitions/UnitNumericAttributes'
+      cloudCover:
+        type: string
+      humidity:
+        type: number
+      precipitation:
+        type: number
+      temperature:
+        $ref: '#/definitions/UnitNumericAttributes'
+      windSpeed:
+        $ref: '#/definitions/UnitNumericAttributes'
+      windDirection:
+        $ref: '#/definitions/UnitNumericAttributes'
   UnitNumericAttributes:
     type: array
     items:

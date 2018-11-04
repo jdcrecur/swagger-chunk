@@ -91,12 +91,15 @@ var SwaggerChunk = function () {
             }
           }
         };
-
+        var pwd = process.cwd();
+        process.chdir(path.dirname(_this.input));
         resolveRefs(root, options).then(function (results) {
           _this.mainJSON = _this.swaggerChunkConversions(results.resolved);
           _this.validate();
+          process.chdir(pwd);
           return resolve(_this.mainJSON);
         }).catch(function (e) {
+          process.chdir(pwd);
           return reject(e);
         });
       });
