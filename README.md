@@ -22,8 +22,11 @@ Swagger is becoming the defacto api documentation tool, swagger files though do 
 
 Swagger-chunk allows you to build and maintain large swagger API documentation files from small manageable chunks, importing and re-using. Perfect for [Documentation-Driven Development](https://gist.github.com/zsup/9434452), and when used in conjunction with [swagger-codegen](https://swagger.io/swagger-codegen/) makes for a powerful methodology to both start and maintain any project.
 
+Before writing the compiled swagger file to disk the object is validated using [openapi-schema-validation](https://www.npmjs.com/package/openapi-schema-validation), any validation issues are written to the terminal.
+
 ## Examples
 For a full example please view the example folder within the swagger-chunk repo.: https://github.com/jdcrecur/swagger-chunk/tree/master/example
+
 
 ## How it works
 Using a combination of [json-refs](https://www.npmjs.com/package/json-refs) and [js-yaml](https://www.npmjs.com/package/js-yaml), [swagger-chunk](https://www.npmjs.com/package/swagger-chunk) combines multiple [YAML](http://yaml.org) files to output a single JSON or YAML file. 
