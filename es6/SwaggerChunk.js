@@ -1,8 +1,10 @@
 const program = require('commander')
 const fs = require('fs-extra')
 const path = require('path')
+require('colors')
 const resolveRefs = require('json-refs').resolveRefs
 const YAML = require('js-yaml')
+const validateSchema = require('openapi-schema-validation').validate
 const logErrorExit = (e) => {
   if (process.env.NODE_ENV === 'TEST') {
     console.log(process.cwd(), e)
@@ -74,11 +76,24 @@ export default class SwaggerChunk {
 
       resolveRefs(root, options).then((results) => {
         this.mainJSON = this.swaggerChunkConversions(results.resolved)
+        this.validate()
         return resolve(this.mainJSON)
       }).catch((e) => {
         return reject(e)
       })
     })
+  }
+
+  validate () {
+    const validation = validateSchema(this.mainJSON, 2)
+    if(validation.errors.length > 0){
+      validation.errors.forEach((error)=>{
+        console.log( 'Property: '.red + error.property.red)
+        console.log( '     Error message: ' + error.message)
+        console.log( '     Stack message: ' + error.stack)
+      })
+      logErrorExit('Error found in swagger.')
+    }
   }
 
   swaggerChunkConversions (swaggerDocument) {

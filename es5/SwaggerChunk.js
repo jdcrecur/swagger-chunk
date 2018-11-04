@@ -13,8 +13,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var program = require('commander');
 var fs = require('fs-extra');
 var path = require('path');
+require('colors');
 var resolveRefs = require('json-refs').resolveRefs;
 var YAML = require('js-yaml');
+var validateSchema = require('openapi-schema-validation').validate;
 var logErrorExit = function logErrorExit(e) {
   if (process.env.NODE_ENV === 'TEST') {
     console.log(process.cwd(), e);
@@ -92,11 +94,25 @@ var SwaggerChunk = function () {
 
         resolveRefs(root, options).then(function (results) {
           _this.mainJSON = _this.swaggerChunkConversions(results.resolved);
+          _this.validate();
           return resolve(_this.mainJSON);
         }).catch(function (e) {
           return reject(e);
         });
       });
+    }
+  }, {
+    key: 'validate',
+    value: function validate() {
+      var validation = validateSchema(this.mainJSON, 2);
+      if (validation.errors.length > 0) {
+        validation.errors.forEach(function (error) {
+          console.log('Property: '.red + error.property.red);
+          console.log('     Error message: ' + error.message);
+          console.log('     Stack message: ' + error.stack);
+        });
+        logErrorExit('Error found in swagger.');
+      }
     }
   }, {
     key: 'swaggerChunkConversions',

@@ -3,7 +3,7 @@ get:
     - temperature
   summary: "Temperature data"
   description: "Get the latest temperature"
-  operationId: temperatureLatestShow
+  operationId: v1TemperatureGet
   produces:
   - "application/json"
   responses:
