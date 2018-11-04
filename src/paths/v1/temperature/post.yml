@@ -3,7 +3,7 @@ post:
     - temperature
   summary: "Temperature data"
   description: "Create a new temperature record."
-  operationId: temperatureLatestShow
+  operationId: v1TemperaturePost
   produces:
   - "application/json"
   parameters:

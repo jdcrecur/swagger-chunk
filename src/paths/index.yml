@@ -1,9 +1,9 @@
 # Weather
 /weather/{country}:
-  $ref: ./weather/index.yml
+  $ref: ./v1/weather/get.yml
 
 # Temperature
 /temperature/:
   allOf:
-    - $ref: ./temperature/temp.read.yml
-    - $ref: ./temperature/temp.write.yml
+    - $ref: ./v1/temperature/get.yml
+    - $ref: ./v1/temperature/post.yml
