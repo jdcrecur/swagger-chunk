@@ -8,11 +8,11 @@
 - [Upgrade from v1 to v2](#upgrade-from-v1-to-v2)
 - [Examples](#examples)
 - [How it works](#how-it-works)
+- [Install and use locally via cli](#install-and-use-locally-via-cli)
+- [Install skeleton swagger-chunk files](#install-skeleton-swagger-chunk-files)
 - [Joining multiple paths](#joining-multiple-paths)
 - [Overriding the base host](#overriding-the-base-host)
 - [Clean up leaf values](#clean-up-leaf-values)
-- [Install and use locally via cli](#install-and-use-locally-via-cli)
-- [Install skeleton swagger-chunk files](#install-skeleton-swagger-chunk-files)
 - [Use programmatically](#use-programmatically)
 - [Future thoughts](#future-thoughts)
 
@@ -46,6 +46,46 @@ Using [swagger-chunk](https://www.npmjs.com/package/swagger-chunk) you can use t
  ```
  $ref: ./definitions/Weather.yml
  ```
+
+## Install and use locally via cli
+Installing: 
+```
+npm i --save swagger-chunk
+```
+
+Running swagger-chunk and outputting the compiled contents to file (typically you would add this to a script in your package.json file): 
+```
+node node_modules/swagger-chunk -o yaml -e yml -i ./src/index.yml -D ./build/ -d weather_app_s2jsonapi
+```
+
+The following options are available, made easily possible by [commander](https://www.npmjs.com/package/commander)
+```
+Usage: index [options]
+
+Options:
+  -v, --version                  output the version number
+  --init                         Inject a skeleton yml structure to the current directory named /src/...
+  -c, --clean_leaf               This will strip all trailing "," from all values
+  -d, --destination_name [name]  Base name of the file
+  -D, --destination [path]       Path to the target
+  -e, --extension [ext]          The output extension, defaults to the output format if not provided.
+  -h, --host_replacement [name]  (swagger2 specific only) A host name string to replace the one found in the source
+  -i, --input [path]             The relative path to the input file
+  -o, --output_format [format]   The output format yaml or json
+  -v, --validate_off             Do not validate the swagger output
+  -x, --exclude_version          Exclude the swagger version from the generated output file. 
+  -h, --help                     output usage information
+```
+
+For an example use of the command line, please view the [example](https://github.com/jdcrecur/swagger-chunk/tree/master/example) `package.json` file.
+
+## Install skeleton swagger-chunk files
+You can kick start your swagger documentation code base by running the below command. The command will result in a new sub directory from the `current working directory` the command is run from:
+
+From locally installed:
+```
+node node_modules/swagger-chunk --init
+```
 
 ## Joining multiple paths
 
@@ -81,54 +121,12 @@ Swagger 2 only offers the option to insert a single host, unlike OpenApi3. To by
 ## Clean up leaf values
 On occasion you may find yourself importing yaml from a 3rd party converter which can sometimes result in trialing commas. You can automatically strip these from the final output by passing the `-c` flag for `--clean_leaf`
 
-## Install and use locally via cli
-Installing: 
-```
-npm i --save swagger-chunk
-```
-
-Running swagger-chunk and outputting the compiled contents to file (typically you would add this to a script in your package.json file): 
-```
-node node_modules/swagger-chunk -o yaml -e yml -i ./src/index.yml -D ./build/ -d weather_app_s2jsonapi
-```
-
-The following options are available, made easily possible by [commander](https://www.npmjs.com/package/commander)
-```
-  Usage: index [options]
-
-  Options:
-
-    -v, --version                  output the version number
-    -o, --output_format [format]   The output format yaml or json
-    -i, --input [path]             The relative path to the input file
-    -D, --destination [path]       Path to the target
-    -d, --destination_name [name]  Base name of the file
-    -h, --host_replacement [name]  (swagger2 specific only) A host name string to replace the one found in the source
-    -e, --extension [ext]          The output extension, defaults to the output format if not provided.
-    -x, --exclude_version          
-    -c, --clean_leaf               This will strip all trailing "," from all values
-    --init                         Inject a skeleton yml structure to the current directory named /src/...
-    -h, --help                     output usage information
-
-```
-
-For an example use of the command line, please view the [example](https://github.com/jdcrecur/swagger-chunk/tree/master/example) `package.json` file.
-
-## Install skeleton swagger-chunk files
-You can kick start your swagger documentation code base by running the below command. The command will result in a new sub directory from the `current working directory` the command is run from:
-
-From locally installed:
-```
-node node_modules/swagger-chunk --init
-```
-
 ## Use programmatically
 Command line use is essentially an abstraction to the actual SwaggerChunk class, all the parameters available for cli are available via methods.
 
 You have the option to import the es6 class or the es5 commonJS module.
 
 For an example use of the pragmatical use, please view the [example](https://github.com/jdcrecur/swagger-chunk/tree/master/example) `package.json` file.
-
 
 ## Future thoughts
 - Cleaner error output for badly formed yml.

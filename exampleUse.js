@@ -10,5 +10,12 @@ chunk
   .toYamlFile( './build', 'built' )
   .then(() => {
     chunk
-      .toJsonFile( './build', 'built' )
+      .toYamlFile()
+      .then(() => {
+        chunk
+          .toJsonFile( './build', 'built' )
+          .then( () => {
+            chunk.toJsonFile()
+          } )
+      })
   })

@@ -39,6 +39,8 @@ export default class SwaggerChunk {
     this.input = program.input
     this.hostReplacement = program.host_replacement || false
     this.cleanLeaf = program.clean_leaf || false
+    this.validateOff = program.validate_off || false
+    this.destination = program.destination || false
   }
 
   readJsonFile (file) {
@@ -58,7 +60,6 @@ export default class SwaggerChunk {
     return new Promise((resolve, reject) => {
       const root = YAML.safeLoad(fs.readFileSync(this.input).toString())
       const options = {
-        //filter: ['relative', 'remote'],
         loaderOptions: {
           processContent: (res, callback) => {
             try {
@@ -88,6 +89,9 @@ export default class SwaggerChunk {
   }
 
   validate () {
+    if(this.validateOff){
+      return
+    }
     const validation = validateSchema(this.mainJSON, 2)
     if(validation.errors.length > 0){
       validation.errors.forEach((error)=>{
@@ -183,9 +187,14 @@ export default class SwaggerChunk {
   }
 
   toJsonFile (dir, name, ext, indentation = 2) {
+    this.destination = dir || false
     ext = ext || 'json'
     return new Promise((resolve, reject) => {
       this.toJSON().then((json) => {
+        if(!this.destination){
+          console.log(JSON.stringify(this.mainJSON, null, 4))
+          return resolve()
+        }
         this.writeFile(dir, name, ext, JSON.stringify(json, null, indentation))
         resolve('File written to: ' + path.join(dir, this.getFileName(name, ext)))
       }).catch(reject)
@@ -202,8 +211,13 @@ export default class SwaggerChunk {
 
   toYamlFile (dir, name, ext) {
     ext = ext || 'yaml'
+    this.destination = dir || false
     return new Promise((resolve, reject) => {
       this.toYAML().then((yml) => {
+        if(!this.destination){
+          console.log(yml)
+          return resolve()
+        }
         this.writeFile(dir, name, ext, yml)
         resolve('File written to: ' + path.join(dir, this.getFileName(name, ext)))
       }).catch(reject)

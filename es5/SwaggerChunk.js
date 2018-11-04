@@ -53,6 +53,8 @@ var SwaggerChunk = function () {
     this.input = program.input;
     this.hostReplacement = program.host_replacement || false;
     this.cleanLeaf = program.clean_leaf || false;
+    this.validateOff = program.validate_off || false;
+    this.destination = program.destination || false;
   }
 
   _createClass(SwaggerChunk, [{
@@ -77,7 +79,6 @@ var SwaggerChunk = function () {
       return new Promise(function (resolve, reject) {
         var root = YAML.safeLoad(fs.readFileSync(_this.input).toString());
         var options = {
-          //filter: ['relative', 'remote'],
           loaderOptions: {
             processContent: function processContent(res, callback) {
               try {
@@ -107,6 +108,9 @@ var SwaggerChunk = function () {
   }, {
     key: 'validate',
     value: function validate() {
+      if (this.validateOff) {
+        return;
+      }
       var validation = validateSchema(this.mainJSON, 2);
       if (validation.errors.length > 0) {
         validation.errors.forEach(function (error) {
@@ -213,9 +217,14 @@ var SwaggerChunk = function () {
 
       var indentation = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 2;
 
+      this.destination = dir || false;
       ext = ext || 'json';
       return new Promise(function (resolve, reject) {
         _this2.toJSON().then(function (json) {
+          if (!_this2.destination) {
+            console.log(JSON.stringify(_this2.mainJSON, null, 4));
+            return resolve();
+          }
           _this2.writeFile(dir, name, ext, JSON.stringify(json, null, indentation));
           resolve('File written to: ' + path.join(dir, _this2.getFileName(name, ext)));
         }).catch(reject);
@@ -238,8 +247,13 @@ var SwaggerChunk = function () {
       var _this4 = this;
 
       ext = ext || 'yaml';
+      this.destination = dir || false;
       return new Promise(function (resolve, reject) {
         _this4.toYAML().then(function (yml) {
+          if (!_this4.destination) {
+            console.log(yml);
+            return resolve();
+          }
           _this4.writeFile(dir, name, ext, yml);
           resolve('File written to: ' + path.join(dir, _this4.getFileName(name, ext)));
         }).catch(reject);
