@@ -263,4 +263,4 @@ var SwaggerChunk = function () {
 }();
 
 exports.default = SwaggerChunk;
-module.exports = exports['default'];
+module.exports = exports.default;
