@@ -21,7 +21,7 @@ tags:
     description: Weather data
 
 paths:
-  $ref: src/paths/index.yml
+  $ref: paths/index.yml
 
 definitions:
-  $ref: src/definitions/index.yml
+  $ref: definitions/index.yml

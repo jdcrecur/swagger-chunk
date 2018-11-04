@@ -24,6 +24,9 @@ Swagger-chunk allows you to build and maintain large swagger API documentation f
 
 Before writing the compiled swagger file to disk the object is validated using [openapi-schema-validation](https://www.npmjs.com/package/openapi-schema-validation), any validation issues are written to the terminal.
 
+## Upgrade from v1 to v2
+The base paths are now relative to the input file. If you are using this tool and upgrade to v2 ensure the main entry point uses files relative to itself unlike relative to the package.json file as in v1.
+
 ## Examples
 For a full example please view the example folder within the swagger-chunk repo.: https://github.com/jdcrecur/swagger-chunk/tree/master/example
 
