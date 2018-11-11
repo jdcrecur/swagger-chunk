@@ -11,16 +11,23 @@ program
   .option('-e, --extension [ext]', 'The output extension, defaults to the output format if not provided.')
   .option('-h, --host_replacement [name]', '(swagger2 specific only) A host name string to replace the one found in the source')
   .option('-i, --input [path]', 'The relative path to the input file')
-  .option('-o, --output_format [format]', 'The output format yaml or json')
-  .option('-v, --validate_off', 'Do not validate the swagger output')
+  .option('-o, --output_format [format]', 'The output format yaml, yml or json. If not provided it will assume the format of the input file.')
+  .option('-V, --validate_off', 'Do not validate the swagger output')
   .option('-x, --exclude_version', 'Exclude the swagger version from the generated output file. ')
   .parse(process.argv)
 
 if (program.init) {
   return require('./init')
 } else {
+  const calculateOutputFormat = () => {
+    if(program.output_format){
+      return program.output_format
+    } else {
+      return program.input.split('.').pop()
+    }
+  }
   const swaggerChunk = new SwaggerChunk(program)
-  swaggerChunk[(program.output_format === 'yaml') ? 'toYamlFile' : 'toJsonFile'](
+  swaggerChunk[(['yaml', 'yml'].indexOf(calculateOutputFormat()) !== -1) ? 'toYamlFile' : 'toJsonFile'](
     program.destination,
     program.destination_name,
     program.extension || false

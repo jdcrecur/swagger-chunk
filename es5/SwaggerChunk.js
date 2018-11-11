@@ -108,17 +108,18 @@ var SwaggerChunk = function () {
   }, {
     key: 'validate',
     value: function validate() {
-      if (this.validateOff) {
-        return;
-      }
-      var validation = validateSchema(this.mainJSON, 2);
-      if (validation.errors.length > 0) {
-        validation.errors.forEach(function (error) {
-          console.log('Property: '.red + error.property.red);
-          console.log('     Error message: ' + error.message);
-          console.log('     Stack message: ' + error.stack);
-        });
-        logErrorExit('Error found in swagger.');
+      if (!this.validateOff) {
+        var validation = validateSchema(this.mainJSON, 2);
+        if (validation.errors.length > 0) {
+          validation.errors.forEach(function (error) {
+            console.log('Property: '.red + error.property.red);
+            console.log('     Error message: ' + error.message);
+            console.log('     Stack message: ' + error.stack);
+          });
+          logErrorExit('Error found in swagger.');
+        }
+      } else {
+        console.log('Validation turned off.');
       }
     }
   }, {
@@ -219,6 +220,7 @@ var SwaggerChunk = function () {
 
       this.destination = dir || false;
       ext = ext || 'json';
+      console.log('Parsing to JSON file');
       return new Promise(function (resolve, reject) {
         _this2.toJSON().then(function (json) {
           if (!_this2.destination) {
@@ -247,6 +249,7 @@ var SwaggerChunk = function () {
       var _this4 = this;
 
       ext = ext || 'yaml';
+      console.log('Parsing to ' + ext + ' file');
       this.destination = dir || false;
       return new Promise(function (resolve, reject) {
         _this4.toYAML().then(function (yml) {
