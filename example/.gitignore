@@ -1,7 +1,0 @@
-# Keep these files
-!.gitkeep
-
-# Ignore these files
-# ignore? -> build/
-node_modules/
-.idea
