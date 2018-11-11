@@ -60,21 +60,22 @@ node node_modules/swagger-chunk -o yaml -e yml -i ./src/index.yml -D ./build/ -d
 
 The following options are available, made easily possible by [commander](https://www.npmjs.com/package/commander)
 ```
-Usage: index [options]
+Usage: swagger-chunk [options]
 
 Options:
   -v, --version                  output the version number
   --init                         Inject a skeleton yml structure to the current directory named /src/...
   -c, --clean_leaf               This will strip all trailing "," from all values
-  -d, --destination_name [name]  Base name of the file
-  -D, --destination [path]       Path to the target
+  -d, --destination_name [name]  Base name of the file eg "weather_api". The version number from the swagger file will be appended automatically unless instructed otherwise.
+  -D, --destination [path]       Path to the target eg "./build". If no destination directory is passed the output will be outputted in the terminal.
   -e, --extension [ext]          The output extension, defaults to the output format if not provided.
   -h, --host_replacement [name]  (swagger2 specific only) A host name string to replace the one found in the source
   -i, --input [path]             The relative path to the input file
-  -o, --output_format [format]   The output format yaml or json
-  -v, --validate_off             Do not validate the swagger output
+  -o, --output_format [format]   The output format yaml, yml or json. If not provided it will assume the format of the input file.
+  -V, --validate_off             Do not validate the swagger output
   -x, --exclude_version          Exclude the swagger version from the generated output file. 
   -h, --help                     output usage information
+
 ```
 
 For an example use of the command line, please view the [example](https://github.com/jdcrecur/swagger-chunk/tree/master/example) `package.json` file.
