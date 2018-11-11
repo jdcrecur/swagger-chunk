@@ -1,6 +1,6 @@
 {
   "name": "swagger-chunk",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "Build and maintain large swagger API documentation files from small manageable chunks. Output yaml or json format. Instal skeleton swagger-chunk & scripts via command line --init",
   "keywords": [
     "swagger",
@@ -44,7 +44,7 @@
     "inquirer": "^6.2.0",
     "js-yaml": "^3.12.0",
     "json-refs": "^3.0.12",
-    "openapi-schema-validation": "^0.4.2"
+    "swagger-parser": "^6.0.2"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

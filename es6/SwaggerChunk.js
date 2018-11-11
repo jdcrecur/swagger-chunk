@@ -79,8 +79,14 @@ export default class SwaggerChunk {
       resolveRefs(root, options).then((results) => {
         this.mainJSON = this.swaggerChunkConversions(results.resolved)
         this.validate()
-        process.chdir(pwd)
-        return resolve(this.mainJSON)
+          .then(()=>{
+            process.chdir(pwd)
+            return resolve(this.mainJSON)
+          })
+          .catch((e)=>{
+            console.error('Error parsing output', e)
+            process.exit(0)
+          })
       }).catch((e) => {
         process.chdir(pwd)
         return reject(e)
@@ -89,19 +95,19 @@ export default class SwaggerChunk {
   }
 
   validate () {
-    if(!this.validateOff){
-      const validation = validateSchema(this.mainJSON, 2)
-      if(validation.errors.length > 0){
-        validation.errors.forEach((error)=>{
-          console.log( 'Property: '.red + error.property.red)
-          console.log( '     Error message: ' + error.message)
-          console.log( '     Stack message: ' + error.stack)
+    return new Promise((resolve, reject)=>{
+      if(!this.validateOff){
+        var SwaggerParser = require('swagger-parser');
+        SwaggerParser.validate(this.mainJSON, {}, (e)=>{
+          if( e ){
+            return reject(e.message)
+          }
+          return resolve()
         })
-        logErrorExit('Error found in swagger.')
+      } else {
+        return resolve()
       }
-    } else {
-      console.log('Validation turned off.')
-    }
+    })
   }
 
   swaggerChunkConversions (swaggerDocument) {
