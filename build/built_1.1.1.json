@@ -12,7 +12,7 @@
     "http",
     "https"
   ],
-  "host": "www.myapi.com",
+  "host": "localhost",
   "basePath": "/api/v1",
   "tags": [
     {

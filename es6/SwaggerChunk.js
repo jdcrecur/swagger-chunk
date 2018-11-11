@@ -98,7 +98,7 @@ export default class SwaggerChunk {
     return new Promise((resolve, reject)=>{
       if(!this.validateOff){
         var SwaggerParser = require('swagger-parser');
-        SwaggerParser.validate(this.mainJSON, {}, (e)=>{
+        SwaggerParser.validate(this.cloneObject(this.mainJSON), {}, (e)=>{
           if( e ){
             return reject(e.message)
           }
@@ -108,6 +108,10 @@ export default class SwaggerChunk {
         return resolve()
       }
     })
+  }
+
+  cloneObject (src) {
+    return JSON.parse(JSON.stringify(src));
   }
 
   swaggerChunkConversions (swaggerDocument) {

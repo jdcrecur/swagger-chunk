@@ -117,7 +117,7 @@ var SwaggerChunk = function () {
       return new Promise(function (resolve, reject) {
         if (!_this2.validateOff) {
           var SwaggerParser = require('swagger-parser');
-          SwaggerParser.validate(_this2.mainJSON, {}, function (e) {
+          SwaggerParser.validate(_this2.cloneObject(_this2.mainJSON), {}, function (e) {
             if (e) {
               return reject(e.message);
             }
@@ -127,6 +127,11 @@ var SwaggerChunk = function () {
           return resolve();
         }
       });
+    }
+  }, {
+    key: 'cloneObject',
+    value: function cloneObject(src) {
+      return JSON.parse(JSON.stringify(src));
     }
   }, {
     key: 'swaggerChunkConversions',
