@@ -89,17 +89,18 @@ export default class SwaggerChunk {
   }
 
   validate () {
-    if(this.validateOff){
-      return
-    }
-    const validation = validateSchema(this.mainJSON, 2)
-    if(validation.errors.length > 0){
-      validation.errors.forEach((error)=>{
-        console.log( 'Property: '.red + error.property.red)
-        console.log( '     Error message: ' + error.message)
-        console.log( '     Stack message: ' + error.stack)
-      })
-      logErrorExit('Error found in swagger.')
+    if(!this.validateOff){
+      const validation = validateSchema(this.mainJSON, 2)
+      if(validation.errors.length > 0){
+        validation.errors.forEach((error)=>{
+          console.log( 'Property: '.red + error.property.red)
+          console.log( '     Error message: ' + error.message)
+          console.log( '     Stack message: ' + error.stack)
+        })
+        logErrorExit('Error found in swagger.')
+      }
+    } else {
+      console.log('Validation turned off.')
     }
   }
 
@@ -189,6 +190,7 @@ export default class SwaggerChunk {
   toJsonFile (dir, name, ext, indentation = 2) {
     this.destination = dir || false
     ext = ext || 'json'
+    console.log('Parsing to JSON file.')
     return new Promise((resolve, reject) => {
       this.toJSON().then((json) => {
         if(!this.destination){
@@ -211,6 +213,7 @@ export default class SwaggerChunk {
 
   toYamlFile (dir, name, ext) {
     ext = ext || 'yaml'
+    console.log('Parsing to ' + ext + ' file.')
     this.destination = dir || false
     return new Promise((resolve, reject) => {
       this.toYAML().then((yml) => {
