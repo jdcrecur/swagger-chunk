@@ -96,9 +96,13 @@ var SwaggerChunk = function () {
         process.chdir(path.dirname(_this.input));
         resolveRefs(root, options).then(function (results) {
           _this.mainJSON = _this.swaggerChunkConversions(results.resolved);
-          _this.validate();
-          process.chdir(pwd);
-          return resolve(_this.mainJSON);
+          _this.validate().then(function () {
+            process.chdir(pwd);
+            return resolve(_this.mainJSON);
+          }).catch(function (e) {
+            console.error('Error parsing output', e);
+            process.exit(0);
+          });
         }).catch(function (e) {
           process.chdir(pwd);
           return reject(e);
@@ -108,19 +112,21 @@ var SwaggerChunk = function () {
   }, {
     key: 'validate',
     value: function validate() {
-      if (!this.validateOff) {
-        var validation = validateSchema(this.mainJSON, 2);
-        if (validation.errors.length > 0) {
-          validation.errors.forEach(function (error) {
-            console.log('Property: '.red + error.property.red);
-            console.log('     Error message: ' + error.message);
-            console.log('     Stack message: ' + error.stack);
+      var _this2 = this;
+
+      return new Promise(function (resolve, reject) {
+        if (!_this2.validateOff) {
+          var SwaggerParser = require('swagger-parser');
+          SwaggerParser.validate(_this2.mainJSON, {}, function (e) {
+            if (e) {
+              return reject(e.message);
+            }
+            return resolve();
           });
-          logErrorExit('Error found in swagger.');
+        } else {
+          return resolve();
         }
-      } else {
-        console.log('Validation turned off.');
-      }
+      });
     }
   }, {
     key: 'swaggerChunkConversions',
@@ -214,31 +220,31 @@ var SwaggerChunk = function () {
   }, {
     key: 'toJsonFile',
     value: function toJsonFile(dir, name, ext) {
-      var _this2 = this;
+      var _this3 = this;
 
       var indentation = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 2;
 
       this.destination = dir || false;
       ext = ext || 'json';
-      console.log('Parsing to JSON file');
+      console.log('Parsing to JSON file.');
       return new Promise(function (resolve, reject) {
-        _this2.toJSON().then(function (json) {
-          if (!_this2.destination) {
-            console.log(JSON.stringify(_this2.mainJSON, null, 4));
+        _this3.toJSON().then(function (json) {
+          if (!_this3.destination) {
+            console.log(JSON.stringify(_this3.mainJSON, null, 4));
             return resolve();
           }
-          _this2.writeFile(dir, name, ext, JSON.stringify(json, null, indentation));
-          resolve('File written to: ' + path.join(dir, _this2.getFileName(name, ext)));
+          _this3.writeFile(dir, name, ext, JSON.stringify(json, null, indentation));
+          resolve('File written to: ' + path.join(dir, _this3.getFileName(name, ext)));
         }).catch(reject);
       });
     }
   }, {
     key: 'toJSON',
     value: function toJSON() {
-      var _this3 = this;
+      var _this4 = this;
 
       return new Promise(function (resolve, reject) {
-        _this3.parseMain().then(function (json) {
+        _this4.parseMain().then(function (json) {
           return resolve(json);
         }).catch(reject);
       });
@@ -246,29 +252,29 @@ var SwaggerChunk = function () {
   }, {
     key: 'toYamlFile',
     value: function toYamlFile(dir, name, ext) {
-      var _this4 = this;
+      var _this5 = this;
 
       ext = ext || 'yaml';
-      console.log('Parsing to ' + ext + ' file');
+      console.log('Parsing to ' + ext + ' file.');
       this.destination = dir || false;
       return new Promise(function (resolve, reject) {
-        _this4.toYAML().then(function (yml) {
-          if (!_this4.destination) {
+        _this5.toYAML().then(function (yml) {
+          if (!_this5.destination) {
             console.log(yml);
             return resolve();
           }
-          _this4.writeFile(dir, name, ext, yml);
-          resolve('File written to: ' + path.join(dir, _this4.getFileName(name, ext)));
+          _this5.writeFile(dir, name, ext, yml);
+          resolve('File written to: ' + path.join(dir, _this5.getFileName(name, ext)));
         }).catch(reject);
       });
     }
   }, {
     key: 'toYAML',
     value: function toYAML() {
-      var _this5 = this;
+      var _this6 = this;
 
       return new Promise(function (resolve, reject) {
-        _this5.parseMain().then(function (json) {
+        _this6.parseMain().then(function (json) {
           // fix the allOff in paths
           return resolve(YAML.safeDump(json));
         }).catch(reject);
