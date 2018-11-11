@@ -23,14 +23,13 @@ Swagger is becoming the defacto api documentation tool, swagger files though do 
 
 Swagger-chunk allows you to build and maintain large swagger API documentation files from small manageable chunks, importing and re-using. Perfect for [Documentation-Driven Development](https://gist.github.com/zsup/9434452), and when used in conjunction with [swagger-codegen](https://swagger.io/swagger-codegen/) makes for a powerful methodology to both start and maintain any project.
 
-Before writing the compiled swagger file to disk the object is validated using [openapi-schema-validation](https://www.npmjs.com/package/openapi-schema-validation), any validation issues are written to the terminal.
+Before writing the compiled swagger file to disk the object is validated using [openapi-schema-validation](https://www.npmjs.com/package/openapi-schema-validation), any validation issues are written to the terminal and the process halted. You may bypass validation, please see the available command line arguments.
 
 ## Upgrade from v1 to v2
 The base paths are now relative to the input file. If you are using this tool and upgrade to v2 ensure the main entry point uses files relative to itself unlike relative to the package.json file as in v1.
 
 ## Examples
-For a full example please view the example folder within the swagger-chunk repo.: https://github.com/jdcrecur/swagger-chunk/tree/master/example
-
+For a full example please view the example folder within the swagger-chunk repo.: [https://github.com/jdcrecur/swagger-chunk/tree/master/src](https://github.com/jdcrecur/swagger-chunk/tree/master/src)
 
 ## How it works
 Using a combination of [json-refs](https://www.npmjs.com/package/json-refs) and [js-yaml](https://www.npmjs.com/package/js-yaml), [swagger-chunk](https://www.npmjs.com/package/swagger-chunk) combines multiple [YAML](http://yaml.org) files to output a single JSON or YAML file. 
@@ -78,7 +77,27 @@ Options:
 
 ```
 
-For an example use of the command line, please view the [example](https://github.com/jdcrecur/swagger-chunk/tree/master/example) `package.json` file.
+An example use via a package.json file:
+```
+{
+    "name": "gateway_swagger",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "build:json": "swagger-chunk -i ./src/index.yml -o json -D ./build/ -d swagger2_api",
+        "build:yaml": "swagger-chunk -i ./src/index.yml -e yaml -D ./build/ -d swagger2_api",
+        "build:all": "npm run build:json && npm run build:yaml"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "swagger-chunk": "2.3.2"
+    }
+}
+```
+In conjunction with the aforementioned [https://github.com/jdcrecur/swagger-chunk/tree/master/src](https://github.com/jdcrecur/swagger-chunk/tree/master/src) it can be seen how to hold an api contract within an own git repo and built using swagger-chunk.
+
 
 ## Install skeleton swagger-chunk files
 You can kick start your swagger documentation code base by running the below command. The command will result in a new sub directory from the `current working directory` the command is run from:
