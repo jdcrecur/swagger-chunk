@@ -4,17 +4,7 @@ const path = require('path')
 require('colors')
 const resolveRefs = require('json-refs').resolveRefs
 const YAML = require('js-yaml')
-const validateSchema = require('openapi-schema-validation').validate
-const logErrorExit = (e) => {
-  if (process.env.NODE_ENV === 'TEST') {
-    console.log(process.cwd(), e)
-    throw new Error(e)
-  }
-  else {
-    console.error('error', e)
-    process.exit()
-  }
-}
+const logErrorExit = require('../logErrorExit')
 
 export default class SwaggerChunk {
 
@@ -28,8 +18,7 @@ export default class SwaggerChunk {
   constructor (program = {}) {
     if (!program.input) {
       logErrorExit('No input provided')
-    }
-    else {
+    } else {
       if (!fs.existsSync(program.input)) {
         logErrorExit('File does not exist. (' + program.input + ')')
       }
@@ -46,8 +35,7 @@ export default class SwaggerChunk {
   readJsonFile (file) {
     try {
       return JSON.parse(fs.readFileSync(file))
-    }
-    catch (err) {
+    } catch (err) {
       return null
     }
   }
@@ -57,15 +45,14 @@ export default class SwaggerChunk {
   }
 
   parseMain () {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const root = YAML.safeLoad(fs.readFileSync(this.input).toString())
       const options = {
         loaderOptions: {
           processContent: (res, callback) => {
             try {
               callback(null, YAML.safeLoad(res.text))
-            }
-            catch (e) {
+            } catch (e) {
               logErrorExit({
                 msg: 'Error parsing yml',
                 e: e
@@ -79,27 +66,31 @@ export default class SwaggerChunk {
       resolveRefs(root, options).then((results) => {
         this.mainJSON = this.swaggerChunkConversions(results.resolved)
         this.validate()
-          .then(()=>{
+          .then(() => {
             process.chdir(pwd)
             return resolve(this.mainJSON)
           })
-          .catch((e)=>{
-            console.error('Error parsing output', e)
-            process.exit(0)
+          .catch((e) => {
+            logErrorExit({
+              msg: 'Error parsing output',
+              e: e
+            })
           })
       }).catch((e) => {
-        process.chdir(pwd)
-        return reject(e)
+        logErrorExit({
+          msg: 'Error resolving',
+          e: e
+        })
       })
     })
   }
 
   validate () {
-    return new Promise((resolve, reject)=>{
-      if(!this.validateOff){
-        var SwaggerParser = require('swagger-parser');
-        SwaggerParser.validate(this.cloneObject(this.mainJSON), {}, (e)=>{
-          if( e ){
+    return new Promise((resolve, reject) => {
+      if (!this.validateOff) {
+        var SwaggerParser = require('swagger-parser')
+        SwaggerParser.validate(this.cloneObject(this.mainJSON), {}, (e) => {
+          if (e) {
             return reject(e.message)
           }
           return resolve()
@@ -111,7 +102,7 @@ export default class SwaggerChunk {
   }
 
   cloneObject (src) {
-    return JSON.parse(JSON.stringify(src));
+    return JSON.parse(JSON.stringify(src))
   }
 
   swaggerChunkConversions (swaggerDocument) {
@@ -169,13 +160,11 @@ export default class SwaggerChunk {
     let parsedResltObj = this.mainJSON
     if (parsedResltObj.info.version) {
       swagVersion = parsedResltObj.info.version
-    }
-    else if (!program.Version) {
+    } else if (!program.Version) {
       const packageJson = (this.packageJson())
       if (packageJson.version) {
         swagVersion = packageJson.version
-      }
-      else {
+      } else {
         // try and get the version from the yml file
         return logErrorExit('No version provided and no version in the package.json')
       }
@@ -191,9 +180,11 @@ export default class SwaggerChunk {
     try {
       fs.ensureDirSync(dir)
       return fs.writeFileSync(path.join(dir, this.getFileName(name, ext)), contents)
-    }
-    catch (e) {
-      throw e
+    } catch (e) {
+      logErrorExit({
+        msg: 'Error writing file',
+        e: e
+      })
     }
   }
 
@@ -203,7 +194,7 @@ export default class SwaggerChunk {
     console.log('Parsing to JSON file.')
     return new Promise((resolve, reject) => {
       this.toJSON().then((json) => {
-        if(!this.destination){
+        if (!this.destination) {
           console.log(JSON.stringify(this.mainJSON, null, 4))
           return resolve()
         }
@@ -227,7 +218,7 @@ export default class SwaggerChunk {
     this.destination = dir || false
     return new Promise((resolve, reject) => {
       this.toYAML().then((yml) => {
-        if(!this.destination){
+        if (!this.destination) {
           console.log(yml)
           return resolve()
         }

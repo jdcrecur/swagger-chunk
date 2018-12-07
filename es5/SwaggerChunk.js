@@ -16,16 +16,7 @@ var path = require('path');
 require('colors');
 var resolveRefs = require('json-refs').resolveRefs;
 var YAML = require('js-yaml');
-var validateSchema = require('openapi-schema-validation').validate;
-var logErrorExit = function logErrorExit(e) {
-  if (process.env.NODE_ENV === 'TEST') {
-    console.log(process.cwd(), e);
-    throw new Error(e);
-  } else {
-    console.error('error', e);
-    process.exit();
-  }
-};
+var logErrorExit = require('../logErrorExit');
 
 var SwaggerChunk = function () {
 
@@ -76,7 +67,7 @@ var SwaggerChunk = function () {
     value: function parseMain() {
       var _this = this;
 
-      return new Promise(function (resolve, reject) {
+      return new Promise(function (resolve) {
         var root = YAML.safeLoad(fs.readFileSync(_this.input).toString());
         var options = {
           loaderOptions: {
@@ -100,12 +91,16 @@ var SwaggerChunk = function () {
             process.chdir(pwd);
             return resolve(_this.mainJSON);
           }).catch(function (e) {
-            console.error('Error parsing output', e);
-            process.exit(0);
+            logErrorExit({
+              msg: 'Error parsing output',
+              e: e
+            });
           });
         }).catch(function (e) {
-          process.chdir(pwd);
-          return reject(e);
+          logErrorExit({
+            msg: 'Error resolving',
+            e: e
+          });
         });
       });
     }
@@ -219,7 +214,10 @@ var SwaggerChunk = function () {
         fs.ensureDirSync(dir);
         return fs.writeFileSync(path.join(dir, this.getFileName(name, ext)), contents);
       } catch (e) {
-        throw e;
+        logErrorExit({
+          msg: 'Error writing file',
+          e: e
+        });
       }
     }
   }, {
