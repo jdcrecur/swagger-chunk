@@ -14,6 +14,6 @@ chunk
           .toJsonFile( './build', 'built' )
           .then( () => {
             chunk.toJsonFile()
-          } )
-      })
-  })
+          } ).catch(e => console.error(e))
+      }).catch(e => console.error(e))
+  }).catch(e => console.error(e))

@@ -5,7 +5,7 @@
   "keywords": [
     "swagger",
     "swagger-codegen",
-    "swagger chunks",
+    "swagger chunk",
     "yaml",
     "yml",
     "merge yaml",
@@ -22,7 +22,7 @@
     "build:es5": "./node_modules/.bin/babel es6 -d es5",
     "build:readme:toc": "node ./node_modules/doctoc/doctoc.js .",
     "lint": "eslint *.js es6/",
-    "test": "npm run test:build-run && NODE_ENV=TEST jest",
+    "test": "npm run test:build-run && NODE_ENV=TEST jest && rm ./build/built*",
     "test:build-run": "npm run build:es5 && node exampleUse.js",
     "prepublish": "npm run build:readme:toc && npm run test && npm run build:es5"
   },
