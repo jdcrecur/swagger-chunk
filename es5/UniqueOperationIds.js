@@ -20,6 +20,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var Walker = require('walker');
 var YAML = require('js-yaml');
+var logErrorExit = require('../logErrorExit');
 
 var UniqueOperationIds = function () {
   function UniqueOperationIds(program) {
@@ -95,11 +96,11 @@ var UniqueOperationIds = function () {
       var _this = this;
 
       return new Promise(function (resolve, reject) {
-        Walker(_this.input).on('file', function (file, stat) {
+        Walker(_this.input).on('file', function (file) {
           if (_this.isYml(file) && file.includes('paths/') && !file.includes('index')) {
             _this.injectUniqueOperationId(file);
           }
-        }).on('error', function (er, entry, stat) {
+        }).on('error', function (err, entry) {
           console.log('Got error reading file: ' + entry);
           reject(err);
         }).on('end', function () {
