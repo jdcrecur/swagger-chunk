@@ -32,7 +32,7 @@ The base paths are now relative to the input file. If you are using this tool an
 For a full example please view the example folder within the swagger-chunk repo.: [https://github.com/jdcrecur/swagger-chunk/tree/master/src](https://github.com/jdcrecur/swagger-chunk/tree/master/src)
 
 ## How it works
-Using a combination of [json-refs](https://www.npmjs.com/package/json-refs) and [js-yaml](https://www.npmjs.com/package/js-yaml), [swagger-chunk](https://www.npmjs.com/package/swagger-chunk) combines multiple [YAML](http://yaml.org) files to output a single JSON or YAML file. 
+Using a combination of [json-refs](https://www.npmjs.com/package/json-refs) and [js-yaml](https://www.npmjs.com/package/js-yaml), [swagger-chunk](https://www.npmjs.com/package/swagger-chunk) combines multiple [YAML](http://yaml.org) files to output a single JSON or YAML file.
 
 Swagger-chunk will automatically extract the swagger version number from the parsed yml and append to the file name produced, helping ensure little confusion when publishing changes to your API swagger documentation.
 
@@ -47,12 +47,12 @@ Using [swagger-chunk](https://www.npmjs.com/package/swagger-chunk) you can use t
  ```
 
 ## Install and use locally via cli
-Installing: 
+Installing:
 ```
 npm i --save swagger-chunk
 ```
 
-Running swagger-chunk and outputting the compiled contents to file (typically you would add this to a script in your package.json file): 
+Running swagger-chunk and outputting the compiled contents to file (typically you would add this to a script in your package.json file):
 ```
 node node_modules/swagger-chunk -o yaml -e yml -i ./src/index.yml -D ./build/ -d weather_app_s2jsonapi
 ```
@@ -62,18 +62,20 @@ The following options are available, made easily possible by [commander](https:/
 Usage: swagger-chunk [options]
 
 Options:
-  -v, --version                  output the version number
-  --init                         Inject a skeleton yml structure to the current directory named /src/...
-  -c, --clean_leaf               This will strip all trailing "," from all values
-  -d, --destination_name [name]  Base name of the file eg "weather_api". The version number from the swagger file will be appended automatically unless instructed otherwise.
-  -D, --destination [path]       Path to the target eg "./build". If no destination directory is passed the output will be outputted in the terminal.
-  -e, --extension [ext]          The output extension, defaults to the output format if not provided.
-  -h, --host_replacement [name]  (swagger2 specific only) A host name string to replace the one found in the source
-  -i, --input [path]             The relative path to the input file
-  -o, --output_format [format]   The output format yaml, yml or json. If not provided it will assume the format of the input file.
-  -V, --validate_off             Do not validate the swagger output
-  -x, --exclude_version          Exclude the swagger version from the generated output file. 
-  -h, --help                     output usage information
+  -v, --version                         output the version number
+  --init                                Inject a skeleton yml structure to the current directory named /src/...
+  -i, --input [path]                    The relative path to the input file
+  -c, --clean_leaf                      This will strip all trailing "," from all values
+  -d, --destination_name [name]         Base name of the file eg "weather_api". The version number from the swagger file will be appended automatically unless instructed otherwise
+  -D, --destination [path]              Path to the target eg "./build". If no destination directory is passed the output will be outputted in the terminal
+  -e, --extension [ext]                 The output extension, defaults to the output format if not provided
+  -h, --host_replacement [name]         (swagger2 specific only) A host name string to replace the one found in the source
+  -o, --output_format [format]          The output format yaml, yml or json. If not provided it will assume the format of the input file
+  -m, --make_unique_operation_ids       // WARNING: modifies your files, check with git: Changes the value of all operationId to the camelCase pathname of the file minus the dir path then continues to the usual operation of bundling.
+  -M, --make_unique_operation_ids_only  Same as -m but will only inject the uniqueOperationIds into the yaml file and then stop
+  -V, --validate_off                    Do not validate the swagger output
+  -x, --exclude_version                 Exclude the swagger version from the generated output file
+  -h, --help                            output usage information
 
 ```
 
@@ -87,6 +89,7 @@ An example use via a package.json file:
     "scripts": {
         "build:json": "swagger-chunk -i ./src/index.yml -o json -D ./build/ -d swagger2_api",
         "build:yaml": "swagger-chunk -i ./src/index.yml -e yaml -D ./build/ -d swagger2_api",
+        "build:yaml-and-inject-uniqueOperationIds": "swagger-chunk -i ./src/index.yml -e yaml -D ./build/ -d swagger2_api -m",
         "build:all": "npm run build:json && npm run build:yaml"
     },
     "author": "",
@@ -107,33 +110,22 @@ From locally installed:
 node node_modules/swagger-chunk --init
 ```
 
-## Joining multiple paths
+## Managing operation ids
+Ensuring the operation ids are unique for every file can be a pain in the arse. If you layout your files in the same pattern demonstrated in the "src" folder of this npm package you can then manage them automatically, each id will be a camelCase string of the file path. As a file system prevents files with duplicate file paths for existing this then means that all the operationId's will also be unique.
 
-Swagger/OpenAPI definition does not allow paths to be merged from an array using the allOf keywords. For example the folowoing will fail:
+Example, inject then continue to bundle:
 ```
-/event/{eventId}/contests/:
-
-  allOf:
-
-    - $ref: ./contests/index.read.yml
-
-    - $ref: ./contests/index.write.yml
+swagger-chunk -i src/index.yml -m
 ```
-
-However, using swagger-chunk you can. The above will automatically fetch and inject the contents into paths leaving the above looking like:
+or stop after injecting the id's
 ```
-/event/{eventId}/contests/:
-    get:
-        .... content
-    post:
-        .... content
-    put:
-        .... content
-    delete:
-        .... content
+swagger-chunk -i src/index.yml -M
 ```
 
-This allows you to share resource in your swagger-chunk repo.
+!! Warning:
+If you have not used this feature before, run this on a new hit head so if it all goes tits up you can always revert the changes.
+
+TODO: Add indentation and path ignore
 
 ## Overriding the base host
 Swagger 2 only offers the option to insert a single host, unlike OpenApi3. To bypass the restriction you can override the host using swagger-chunk by passing in the -h flag. This will replace the host found in the swagger source with that passed.

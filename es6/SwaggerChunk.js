@@ -30,6 +30,7 @@ export default class SwaggerChunk {
     this.cleanLeaf = program.clean_leaf || false
     this.validateOff = program.validate_off || false
     this.destination = program.destination || false
+    this.uniqueOperationIds = program.unique_operation_ids || false
   }
 
   readJsonFile (file) {
@@ -43,27 +44,31 @@ export default class SwaggerChunk {
   packageJson () {
     return this.readJsonFile('./package.json')
   }
-
-  parseMain () {
-    return new Promise((resolve) => {
-      const root = YAML.safeLoad(fs.readFileSync(this.input).toString())
-      const options = {
-        loaderOptions: {
-          processContent: (res, callback) => {
-            try {
-              callback(null, YAML.safeLoad(res.text))
-            } catch (e) {
-              logErrorExit({
-                msg: 'Error parsing yml',
-                e: e
-              })
-            }
+  parseMainLoaderOptions () {
+    return {
+      loaderOptions: {
+        processContent: (res, callback) => {
+          try {
+            callback(null, YAML.safeLoad(res.text))
+          } catch (e) {
+            logErrorExit({
+              msg: 'Error parsing yml',
+              e: e
+            })
           }
         }
       }
+    }
+  }
+  parseMainRoot () {
+    return YAML.safeLoad(fs.readFileSync(this.input).toString())
+  }
+  parseMain () {
+    return new Promise((resolve) => {
+      const root = this.parseMainRoot()
       const pwd = process.cwd()
       process.chdir(path.dirname(this.input))
-      resolveRefs(root, options).then((results) => {
+      resolveRefs(root, this.parseMainLoaderOptions()).then((results) => {
         this.mainJSON = this.swaggerChunkConversions(results.resolved)
         this.validate()
           .then(() => {
@@ -191,7 +196,6 @@ export default class SwaggerChunk {
   toJsonFile (dir, name, ext, indentation = 2) {
     this.destination = dir || false
     ext = ext || 'json'
-    console.log('Parsing to JSON file.')
     return new Promise((resolve, reject) => {
       this.toJSON().then((json) => {
         if (!this.destination) {
@@ -214,7 +218,6 @@ export default class SwaggerChunk {
 
   toYamlFile (dir, name, ext) {
     ext = ext || 'yaml'
-    console.log('Parsing to ' + ext + ' file.')
     this.destination = dir || false
     return new Promise((resolve, reject) => {
       this.toYAML().then((yml) => {
@@ -231,7 +234,6 @@ export default class SwaggerChunk {
   toYAML () {
     return new Promise((resolve, reject) => {
       this.parseMain().then((json) => {
-        // fix the allOff in paths
         return resolve(YAML.safeDump(json))
       }).catch(reject)
     })

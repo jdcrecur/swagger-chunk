@@ -46,6 +46,7 @@ var SwaggerChunk = function () {
     this.cleanLeaf = program.clean_leaf || false;
     this.validateOff = program.validate_off || false;
     this.destination = program.destination || false;
+    this.uniqueOperationIds = program.unique_operation_ids || false;
   }
 
   _createClass(SwaggerChunk, [{
@@ -63,29 +64,38 @@ var SwaggerChunk = function () {
       return this.readJsonFile('./package.json');
     }
   }, {
+    key: 'parseMainLoaderOptions',
+    value: function parseMainLoaderOptions() {
+      return {
+        loaderOptions: {
+          processContent: function processContent(res, callback) {
+            try {
+              callback(null, YAML.safeLoad(res.text));
+            } catch (e) {
+              logErrorExit({
+                msg: 'Error parsing yml',
+                e: e
+              });
+            }
+          }
+        }
+      };
+    }
+  }, {
+    key: 'parseMainRoot',
+    value: function parseMainRoot() {
+      return YAML.safeLoad(fs.readFileSync(this.input).toString());
+    }
+  }, {
     key: 'parseMain',
     value: function parseMain() {
       var _this = this;
 
       return new Promise(function (resolve) {
-        var root = YAML.safeLoad(fs.readFileSync(_this.input).toString());
-        var options = {
-          loaderOptions: {
-            processContent: function processContent(res, callback) {
-              try {
-                callback(null, YAML.safeLoad(res.text));
-              } catch (e) {
-                logErrorExit({
-                  msg: 'Error parsing yml',
-                  e: e
-                });
-              }
-            }
-          }
-        };
+        var root = _this.parseMainRoot();
         var pwd = process.cwd();
         process.chdir(path.dirname(_this.input));
-        resolveRefs(root, options).then(function (results) {
+        resolveRefs(root, _this.parseMainLoaderOptions()).then(function (results) {
           _this.mainJSON = _this.swaggerChunkConversions(results.resolved);
           _this.validate().then(function () {
             process.chdir(pwd);
@@ -229,7 +239,6 @@ var SwaggerChunk = function () {
 
       this.destination = dir || false;
       ext = ext || 'json';
-      console.log('Parsing to JSON file.');
       return new Promise(function (resolve, reject) {
         _this3.toJSON().then(function (json) {
           if (!_this3.destination) {
@@ -258,7 +267,6 @@ var SwaggerChunk = function () {
       var _this5 = this;
 
       ext = ext || 'yaml';
-      console.log('Parsing to ' + ext + ' file.');
       this.destination = dir || false;
       return new Promise(function (resolve, reject) {
         _this5.toYAML().then(function (yml) {
@@ -278,7 +286,6 @@ var SwaggerChunk = function () {
 
       return new Promise(function (resolve, reject) {
         _this6.parseMain().then(function (json) {
-          // fix the allOff in paths
           return resolve(YAML.safeDump(json));
         }).catch(reject);
       });
