@@ -34,8 +34,8 @@ var UniqueOperationIds = function () {
       }
     }
     this.input = _path2.default.dirname(program.input);
-    this.stripValue = 'src/paths/';
-    this.indentation = 4;
+    this.stripValue = program.strip_value || 'src/paths/';
+    this.indentation = program.indentation || 4;
   }
 
   _createClass(UniqueOperationIds, [{
