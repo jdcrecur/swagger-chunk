@@ -1,5 +1,5 @@
 const program = require('commander')
-const SwaggerChunk = require('./es6/SwaggerChunk')
+const SwaggerChunk = require('./es5/SwaggerChunk')
 const pkg = require('./package.json')
 
 program
@@ -44,7 +44,7 @@ const bundle = () => {
 
 // Inject uniqueOperationIds
 if(program.make_unique_operation_ids || program.make_unique_operation_ids_only){
-  const uniqueOperationIds = require('./es6/UniqueOperationIds')
+  const uniqueOperationIds = require('./es5/UniqueOperationIds')
   const UniqueOperationIds = new uniqueOperationIds(program)
   UniqueOperationIds
     .listInputDirectory()
