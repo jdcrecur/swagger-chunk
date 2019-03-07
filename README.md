@@ -8,13 +8,13 @@
 - [Upgrade from v1 to v2](#upgrade-from-v1-to-v2)
 - [Examples](#examples)
 - [How it works](#how-it-works)
-- [Install and use locally via cli](#install-and-use-locally-via-cli)
-- [Install skeleton swagger-chunk files](#install-skeleton-swagger-chunk-files)
-- [Joining multiple paths](#joining-multiple-paths)
-- [Overriding the base host](#overriding-the-base-host)
-- [Clean up leaf values](#clean-up-leaf-values)
-- [Use programmatically](#use-programmatically)
-- [Future thoughts](#future-thoughts)
+  - [Install and use locally via cli](#install-and-use-locally-via-cli)
+  - [Install skeleton swagger-chunk files](#install-skeleton-swagger-chunk-files)
+  - [Managing operation ids](#managing-operation-ids)
+  - [Overriding the base host](#overriding-the-base-host)
+  - [Clean up leaf values](#clean-up-leaf-values)
+  - [Use programmatically](#use-programmatically)
+  - [Future thoughts](#future-thoughts)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
