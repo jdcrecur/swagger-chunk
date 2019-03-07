@@ -57,16 +57,18 @@ export default class UniqueOperationIds {
   injectUniqueOperationId(filePath){
     const uniqueOpId = this.getUniqueOperationIdFromPath(filePath)
     let json = this.readYmlToJson(filePath)
-    if(json.summary || json.description){
-      json.operationId = uniqueOpId
-    } else {
-      for(const key in json){
-        if(json[key].summary || json[key].description){
-          json[key].operationId = uniqueOpId
+    if(json){
+      if(json.summary || json.description){
+        json.operationId = uniqueOpId
+      } else {
+        for(const key in json){
+          if(json[key].summary || json[key].description){
+            json[key].operationId = uniqueOpId
+          }
         }
       }
+      this.writeJsonToYaml(filePath, json)
     }
-    return this.writeJsonToYaml(filePath, json)
   }
   listInputDirectory(){
     return new Promise((resolve, reject) => {
