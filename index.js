@@ -15,7 +15,7 @@ program
   .option('-n, --indentation [indent]', 'The numeric indentation, defaults to 4 if nothing passed')
   .option('-m, --make_unique_operation_ids', '// WARNING: modifies your files, check with git: Changes the value of all operationId to the camelCase pathname of the file minus the dir path then continues to the usual operation of bundling.')
   .option('-M, --make_unique_operation_ids_only', 'Same as -m but will only inject the uniqueOperationIds into the yaml file and then stop')
-  .option('-s, --strip_value', 'Related to m & M, the value removed from the file path for the uniqueIds, defaults to src/paths/')
+  .option('-s, --strip_value [strip]', 'Related to m & M, the value removed from the file path for the uniqueIds, defaults to src/paths/')
   .option('-V, --validate_off', 'Do not validate the swagger output')
   .option('-x, --exclude_version', 'Exclude the swagger version from the generated output file')
   .parse(process.argv)

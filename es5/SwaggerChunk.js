@@ -46,7 +46,7 @@ var SwaggerChunk = function () {
     this.cleanLeaf = program.clean_leaf || false;
     this.validateOff = program.validate_off || false;
     this.destination = program.destination || false;
-    this.uniqueOperationIds = program.unique_operation_ids || false;
+    this.indentation = program.indentation || 4;
   }
 
   _createClass(SwaggerChunk, [{
@@ -235,8 +235,6 @@ var SwaggerChunk = function () {
     value: function toJsonFile(dir, name, ext) {
       var _this3 = this;
 
-      var indentation = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 2;
-
       this.destination = dir || false;
       ext = ext || 'json';
       return new Promise(function (resolve, reject) {
@@ -245,7 +243,7 @@ var SwaggerChunk = function () {
             console.log(JSON.stringify(_this3.mainJSON, null, 4));
             return resolve();
           }
-          _this3.writeFile(dir, name, ext, JSON.stringify(json, null, indentation));
+          _this3.writeFile(dir, name, ext, JSON.stringify(json, null, _this3.indentation));
           resolve('File written to: ' + path.join(dir, _this3.getFileName(name, ext)));
         }).catch(reject);
       });
@@ -286,7 +284,7 @@ var SwaggerChunk = function () {
 
       return new Promise(function (resolve, reject) {
         _this6.parseMain().then(function (json) {
-          return resolve(YAML.safeDump(json));
+          return resolve(YAML.safeDump(json, _this6.indentation));
         }).catch(reject);
       });
     }

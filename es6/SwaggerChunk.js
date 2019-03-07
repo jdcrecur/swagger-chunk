@@ -30,7 +30,7 @@ export default class SwaggerChunk {
     this.cleanLeaf = program.clean_leaf || false
     this.validateOff = program.validate_off || false
     this.destination = program.destination || false
-    this.uniqueOperationIds = program.unique_operation_ids || false
+    this.indentation = program.indentation || 4
   }
 
   readJsonFile (file) {
@@ -193,7 +193,7 @@ export default class SwaggerChunk {
     }
   }
 
-  toJsonFile (dir, name, ext, indentation = 2) {
+  toJsonFile (dir, name, ext) {
     this.destination = dir || false
     ext = ext || 'json'
     return new Promise((resolve, reject) => {
@@ -202,7 +202,7 @@ export default class SwaggerChunk {
           console.log(JSON.stringify(this.mainJSON, null, 4))
           return resolve()
         }
-        this.writeFile(dir, name, ext, JSON.stringify(json, null, indentation))
+        this.writeFile(dir, name, ext, JSON.stringify(json, null, this.indentation))
         resolve('File written to: ' + path.join(dir, this.getFileName(name, ext)))
       }).catch(reject)
     })
@@ -234,7 +234,12 @@ export default class SwaggerChunk {
   toYAML () {
     return new Promise((resolve, reject) => {
       this.parseMain().then((json) => {
-        return resolve(YAML.safeDump(json))
+        return resolve(
+          YAML.safeDump(
+            json,
+            this.indentation
+          )
+        )
       }).catch(reject)
     })
   }
