@@ -111,22 +111,6 @@ export default class SwaggerChunk {
   }
 
   swaggerChunkConversions (swaggerDocument) {
-    // Iterate over all paths and inject the rel. sec defs.
-    for (let path in swaggerDocument.paths) {
-      for (let method in swaggerDocument.paths[path]) {
-        // Check is the method is allOff
-        if (method === 'allOf') {
-          let newObj = {}
-          swaggerDocument.paths[path][method].forEach((item) => {
-            for (let verb in item) {
-              // console.log(item)
-              newObj[verb] = item[verb]
-            }
-          })
-          swaggerDocument.paths[path] = newObj
-        }
-      }
-    }
     if (this.hostReplacement) {
       swaggerDocument.host = this.hostReplacement
     }

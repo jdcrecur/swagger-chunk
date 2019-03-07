@@ -19,9 +19,7 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Summary
-Swagger is becoming the defacto api documentation tool, swagger files though do have a tendency of growing wildly large and hard to maintain.
-
-Swagger-chunk allows you to build and maintain large swagger API documentation files from small manageable chunks, importing and re-using. Perfect for [Documentation-Driven Development](https://gist.github.com/zsup/9434452), and when used in conjunction with [swagger-codegen](https://swagger.io/swagger-codegen/) makes for a powerful methodology to both start and maintain any project.
+Swagger-chunk allows you to build and maintain large swagger 2 API documentation files from small manageable chunks, importing and re-using. Perfect for [Documentation-Driven Development](https://gist.github.com/zsup/9434452), and when used in conjunction with [swagger-codegen](https://swagger.io/swagger-codegen/) makes for a powerful methodology to both start and maintain any project.
 
 Before writing the compiled swagger file to disk the object is validated using [openapi-schema-validation](https://www.npmjs.com/package/openapi-schema-validation), any validation issues are written to the terminal and the process halted. You may bypass validation, please see the available command line arguments.
 
@@ -46,7 +44,7 @@ Using [swagger-chunk](https://www.npmjs.com/package/swagger-chunk) you can use t
  $ref: ./definitions/Weather.yml
  ```
 
-## Install and use locally via cli
+### Install and use locally via cli
 Installing:
 ```
 npm i --save swagger-chunk
@@ -71,12 +69,13 @@ Options:
   -e, --extension [ext]                 The output extension, defaults to the output format if not provided
   -h, --host_replacement [name]         (swagger2 specific only) A host name string to replace the one found in the source
   -o, --output_format [format]          The output format yaml, yml or json. If not provided it will assume the format of the input file
+  -n, --indentation [indent]            The numeric indentation, defaults to 4 if nothing passed
   -m, --make_unique_operation_ids       // WARNING: modifies your files, check with git: Changes the value of all operationId to the camelCase pathname of the file minus the dir path then continues to the usual operation of bundling.
   -M, --make_unique_operation_ids_only  Same as -m but will only inject the uniqueOperationIds into the yaml file and then stop
+  -s, --strip_value [strip]             Related to m & M, the value removed from the file path for the uniqueIds, defaults to src/paths/
   -V, --validate_off                    Do not validate the swagger output
   -x, --exclude_version                 Exclude the swagger version from the generated output file
   -h, --help                            output usage information
-
 ```
 
 An example use via a package.json file:
@@ -102,7 +101,7 @@ An example use via a package.json file:
 In conjunction with the aforementioned [https://github.com/jdcrecur/swagger-chunk/tree/master/src](https://github.com/jdcrecur/swagger-chunk/tree/master/src) it can be seen how to hold an api contract within an own git repo and built using swagger-chunk.
 
 
-## Install skeleton swagger-chunk files
+### Install skeleton swagger-chunk files
 You can kick start your swagger documentation code base by running the below command. The command will result in a new sub directory from the `current working directory` the command is run from:
 
 From locally installed:
@@ -110,7 +109,7 @@ From locally installed:
 node node_modules/swagger-chunk --init
 ```
 
-## Managing operation ids
+### Managing operation ids
 Ensuring the operation ids are unique for every file can be a pain in the arse. If you layout your files in the same pattern demonstrated in the "src" folder of this npm package you can then manage them automatically, each id will be a camelCase string of the file path. As a file system prevents files with duplicate file paths for existing this then means that all the operationId's will also be unique.
 
 Example, inject then continue to bundle:
@@ -122,23 +121,22 @@ or stop after injecting the id's
 swagger-chunk -i src/index.yml -M
 ```
 
-!! Warning:
-If you have not used this feature before, run this on a new hit head so if it all goes tits up you can always revert the changes.
+> Warning: If you have not used this feature before, run this on a new hit head so if it all goes tits up you can always revert the changes.
 
-TODO: Add indentation and path ignore
+> This feature strips 'src/paths/ from the file path for the operation id, change this as required with the -s flag'
 
-## Overriding the base host
+### Overriding the base host
 Swagger 2 only offers the option to insert a single host, unlike OpenApi3. To bypass the restriction you can override the host using swagger-chunk by passing in the -h flag. This will replace the host found in the swagger source with that passed.
 
-## Clean up leaf values
+### Clean up leaf values
 On occasion you may find yourself importing yaml from a 3rd party converter which can sometimes result in trialing commas. You can automatically strip these from the final output by passing the `-c` flag for `--clean_leaf`
 
-## Use programmatically
+### Use programmatically
 Command line use is essentially an abstraction to the actual SwaggerChunk class, all the parameters available for cli are available via methods.
 
 You have the option to import the es6 class or the es5 commonJS module.
 
 For an example use of the pragmatical use, please view the [example](https://github.com/jdcrecur/swagger-chunk/tree/master/example) `package.json` file.
 
-## Future thoughts
+### Future thoughts
 - Cleaner error output for badly formed yml.

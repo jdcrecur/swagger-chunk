@@ -141,24 +141,6 @@ var SwaggerChunk = function () {
   }, {
     key: 'swaggerChunkConversions',
     value: function swaggerChunkConversions(swaggerDocument) {
-      // Iterate over all paths and inject the rel. sec defs.
-      for (var _path in swaggerDocument.paths) {
-        for (var method in swaggerDocument.paths[_path]) {
-          // Check is the method is allOff
-          if (method === 'allOf') {
-            (function () {
-              var newObj = {};
-              swaggerDocument.paths[_path][method].forEach(function (item) {
-                for (var verb in item) {
-                  // console.log(item)
-                  newObj[verb] = item[verb];
-                }
-              });
-              swaggerDocument.paths[_path] = newObj;
-            })();
-          }
-        }
-      }
       if (this.hostReplacement) {
         swaggerDocument.host = this.hostReplacement;
       }
