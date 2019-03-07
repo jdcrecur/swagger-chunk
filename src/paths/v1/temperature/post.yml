@@ -1,10 +1,10 @@
 tags:
   - temperature
-summary: "Temperature data"
-description: "Create a new temperature record."
+summary: Temperature data
+description: Create a new temperature record.
 operationId: v1TemperaturePost
 produces:
-- "application/json"
+  - application/json
 parameters:
   - in: body
     name: temp
@@ -17,9 +17,9 @@ parameters:
         temp:
           type: number
 responses:
-  "200":
+  '200':
     description: Successful temp creation
     schema:
-      $ref: "#/definitions/Temperature"
-  "422":
+      $ref: '#/definitions/Temperature'
+  '422':
     description: Invalid form data provided
