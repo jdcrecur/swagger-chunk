@@ -25,3 +25,6 @@ paths:
 
 definitions:
   $ref: definitions/index.yml
+
+parameters:
+  $ref: parameters/index.yml

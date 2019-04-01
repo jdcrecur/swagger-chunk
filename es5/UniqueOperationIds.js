@@ -79,16 +79,18 @@ var UniqueOperationIds = function () {
     value: function injectUniqueOperationId(filePath) {
       var uniqueOpId = this.getUniqueOperationIdFromPath(filePath);
       var json = this.readYmlToJson(filePath);
-      if (json.summary || json.description) {
-        json.operationId = uniqueOpId;
-      } else {
-        for (var key in json) {
-          if (json[key].summary || json[key].description) {
-            json[key].operationId = uniqueOpId;
+      if (json) {
+        if (json.summary || json.description) {
+          json.operationId = uniqueOpId;
+        } else {
+          for (var key in json) {
+            if (json[key].summary || json[key].description) {
+              json[key].operationId = uniqueOpId;
+            }
           }
         }
+        this.writeJsonToYaml(filePath, json);
       }
-      return this.writeJsonToYaml(filePath, json);
     }
   }, {
     key: 'listInputDirectory',

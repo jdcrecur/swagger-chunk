@@ -11,6 +11,7 @@ parameters:
     description: ISO "ALPHA-2 Code"
     required: true
     type: string
+  - $ref: '#/parameters/offset'
 responses:
   '200':
     description: Successful fecth
