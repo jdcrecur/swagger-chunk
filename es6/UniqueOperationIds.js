@@ -2,15 +2,15 @@ import fs from 'fs'
 import path from 'path'
 const Walker = require('walker')
 const YAML = require('js-yaml')
-const logErrorExit = require('../logErrorExit')
+const dd = require('../dd')
 
 export default class UniqueOperationIds {
   constructor(program){
     if (!program.input) {
-      logErrorExit('No input provided')
+      dd('No input provided')
     } else {
       if (!fs.existsSync(program.input)) {
-        logErrorExit('File does not exist. (' + program.input + ')')
+        dd('File does not exist. (' + program.input + ')')
       }
     }
     this.input = path.dirname(program.input)
@@ -70,7 +70,7 @@ export default class UniqueOperationIds {
       this.writeJsonToYaml(filePath, json)
     }
   }
-  listInputDirectory(){
+  listAndInject(){
     return new Promise((resolve, reject) => {
       Walker(this.input)
         .on('file', (file) => {

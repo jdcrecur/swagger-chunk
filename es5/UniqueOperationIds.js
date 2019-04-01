@@ -20,17 +20,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var Walker = require('walker');
 var YAML = require('js-yaml');
-var logErrorExit = require('../logErrorExit');
+var dd = require('../dd');
 
 var UniqueOperationIds = function () {
   function UniqueOperationIds(program) {
     _classCallCheck(this, UniqueOperationIds);
 
     if (!program.input) {
-      logErrorExit('No input provided');
+      dd('No input provided');
     } else {
       if (!_fs2.default.existsSync(program.input)) {
-        logErrorExit('File does not exist. (' + program.input + ')');
+        dd('File does not exist. (' + program.input + ')');
       }
     }
     this.input = _path2.default.dirname(program.input);
@@ -93,8 +93,8 @@ var UniqueOperationIds = function () {
       }
     }
   }, {
-    key: 'listInputDirectory',
-    value: function listInputDirectory() {
+    key: 'listAndInject',
+    value: function listAndInject() {
       var _this = this;
 
       return new Promise(function (resolve, reject) {

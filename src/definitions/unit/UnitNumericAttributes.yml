@@ -1,8 +1,0 @@
-type: array
-items:
-  type: object
-  properties:
-    unit:
-      type: string
-    value:
-      type: number

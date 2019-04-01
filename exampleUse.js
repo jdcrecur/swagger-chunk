@@ -4,12 +4,15 @@ const chunk = new SwaggerChunk({
   input: './src/index.yml',
 })
 
+console.log('Building yaml file')
 chunk
   .toYamlFile( './build', 'built' )
   .then(() => {
+    console.log('Building yaml console')
     chunk
       .toYamlFile()
       .then(() => {
+        console.log('Building json')
         chunk
           .toJsonFile( './build', 'built' )
           .then( () => {

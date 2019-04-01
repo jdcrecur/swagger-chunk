@@ -6,11 +6,15 @@ operationId: v1WeatherGet
 produces:
   - application/json
 parameters:
-  - $ref: '#/parameters/offset'
+  - in: path
+    name: country
+    description: ISO "ALPHA-2 Code"
+    required: true
+    type: string
 responses:
   '200':
     description: Successful fecth
     schema:
-      $ref: '#/definitions/Weathers'
+      $ref: '#/definitions/Weather'
   '404':
     description: Country not found

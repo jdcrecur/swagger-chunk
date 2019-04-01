@@ -47,7 +47,7 @@ if(program.make_unique_operation_ids || program.make_unique_operation_ids_only){
   const uniqueOperationIds = require('./es5/UniqueOperationIds')
   const UniqueOperationIds = new uniqueOperationIds(program)
   UniqueOperationIds
-    .listInputDirectory()
+    .listAndInject()
     .then(() => {
       if(program.make_unique_operation_ids_only){
         process.exit(0)

@@ -1,7 +1,10 @@
 # Weather
-/weather/{country}:
+/weather/:
   get:
     $ref: ./v1/weather/get.yml
+/weather/{country}:
+  get:
+    $ref: ./v1/weather/country/get.yml
 
 # Temperature
 /temperature/:
