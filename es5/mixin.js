@@ -26,7 +26,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @param currentFilePointer
  * @returns {string}
  */
-exports.default = function (val, currentFilePointer) {
+exports.default = function (val, currentFilePointer, linePadding) {
   if (typeof val === 'string' && val.indexOf('mixin(') !== -1) {
     var params = (0, _functionParamsFromStr2.default)(val);
     var mixinPath = '';
@@ -38,8 +38,17 @@ exports.default = function (val, currentFilePointer) {
         mixinPath = param;
       }
     });
-    return nunjucks.render(_path2.default.join(_path2.default.dirname(currentFilePointer), mixinPath), vars);
+    nunjucks.configure({ autoescape: false });
+    var rendered = nunjucks.render(_path2.default.join(_path2.default.dirname(currentFilePointer), mixinPath), vars);
+    console.log(rendered);
+    // inject the indentation
+    var parts = rendered.split('\n');
+    parts.forEach(function (part, i) {
+      parts[i] = linePadding + part;
+    });
+    return parts.join('\n');
   }
+
   return val;
 };
 

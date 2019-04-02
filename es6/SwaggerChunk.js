@@ -34,6 +34,7 @@ export default class SwaggerChunk {
     this.validateOff = program.validate_off || false
     this.destination = program.destination || false
     this.indentation = program.indentation || 4
+    this.originalIndentation = program.originalIndentation || 2
   }
 
   readJsonFile (file) {
@@ -54,13 +55,19 @@ export default class SwaggerChunk {
         processContent: (res, callback) => {
           let mixinStr = res.text.match(/(mixin\(.*\))/)
           if(mixinStr){
-            console.log(res.text)
-            console.log('>>>', calculateIndentFromLineBreak(res.text, mixinStr.index))
-            console.log(res.text[mixinStr.index])
+            let indent = calculateIndentFromLineBreak(res.text, mixinStr.index) + this.originalIndentation
+            let replaceVal = `
+`
+            let linePadding = ''
+            for(let i = 0 ; i < indent ; ++i){
+              linePadding += ' '
+            }
+            replaceVal += mixin(mixinStr[0], res.location, linePadding)
             res.text = res.text.replace(
               mixinStr[0],
-              mixin(mixinStr[0], res.location)
+              replaceVal
             )
+            console.log(res.text)
           }
 
           try {
