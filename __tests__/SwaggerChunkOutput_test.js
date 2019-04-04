@@ -6,7 +6,7 @@ describe('Read to JSON', () => {
   })
 
   it('Should have 2 paths', async () => {
-    expect(Object.keys(json.paths).length).toBe(2)
+    expect(Object.keys(json.paths).length).toBe(3)
   })
 
   it('"/weather/{country}" should have a single get method', async (done) => {

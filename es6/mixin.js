@@ -6,6 +6,7 @@ import functionParamsFromStr from './functionParamsFromStr'
  * mixin()
  * @param val
  * @param currentFilePointer
+ * @param linePadding
  * @returns {string}
  */
 export default (val, currentFilePointer, linePadding) => {
@@ -25,7 +26,6 @@ export default (val, currentFilePointer, linePadding) => {
       path.join(path.dirname(currentFilePointer), mixinPath),
       vars
     )
-    console.log(rendered)
     // inject the indentation
     let parts = rendered.split('\n')
     parts.forEach((part, i) => {

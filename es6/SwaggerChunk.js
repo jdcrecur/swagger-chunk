@@ -67,7 +67,6 @@ export default class SwaggerChunk {
               mixinStr[0],
               replaceVal
             )
-            console.log(res.text)
           }
 
           try {

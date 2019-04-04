@@ -2,7 +2,7 @@ tags:
   - weather
 summary: Weather data
 description: Weather for a given country for a given `ISO ALPHA-2 Code'
-operationId: v1WeatherGet
+operationId: v1WeatherCountryGet
 produces:
   - application/json
 parameters:

@@ -103,7 +103,6 @@ var SwaggerChunk = function () {
               }
               replaceVal += (0, _mixin2.default)(mixinStr[0], res.location, linePadding);
               res.text = res.text.replace(mixinStr[0], replaceVal);
-              console.log(res.text);
             }
 
             try {

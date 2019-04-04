@@ -24,6 +24,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * mixin()
  * @param val
  * @param currentFilePointer
+ * @param linePadding
  * @returns {string}
  */
 exports.default = function (val, currentFilePointer, linePadding) {
@@ -40,7 +41,6 @@ exports.default = function (val, currentFilePointer, linePadding) {
     });
     nunjucks.configure({ autoescape: false });
     var rendered = nunjucks.render(_path2.default.join(_path2.default.dirname(currentFilePointer), mixinPath), vars);
-    console.log(rendered);
     // inject the indentation
     var parts = rendered.split('\n');
     parts.forEach(function (part, i) {

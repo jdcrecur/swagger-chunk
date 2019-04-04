@@ -4,19 +4,32 @@ const chunk = new SwaggerChunk({
   input: './src/index.yml',
 })
 
-console.log('Building yaml file')
-chunk
-  .toYamlFile( './build', 'built' )
+const uniqueOperationIds = require('./es5/UniqueOperationIds')
+const program = {
+  make_unique_operation_ids: true,
+  input: './src/index.yml',
+}
+const UniqueOperationIds = new uniqueOperationIds(program)
+UniqueOperationIds
+  .listAndInject()
   .then(() => {
-    console.log('Building yaml console')
     chunk
-      .toYamlFile()
+      .toYamlFile('./build', 'built')
       .then(() => {
-        console.log('Building json')
         chunk
-          .toJsonFile( './build', 'built' )
-          .then( () => {
-            chunk.toJsonFile()
-          } ).catch(e => console.error(e))
+          .toYamlFile()
+          .then(() => {
+            console.log('Building json')
+            chunk
+              .toJsonFile('./build', 'built')
+              .then(() => {
+                chunk.toJsonFile()
+              }).catch(e => console.error(e))
+          }).catch(e => console.error(e))
       }).catch(e => console.error(e))
-  }).catch(e => console.error(e))
+  })
+  .catch(e => {
+    console.error('Error injecting uniqueOperationIds: ', e)
+  })
+
+
