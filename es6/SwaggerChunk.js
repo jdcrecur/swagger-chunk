@@ -1,10 +1,13 @@
-const program = require('commander')
-const fs = require('fs-extra')
-const path = require('path')
+import mixin from './mixin'
+import calculateIndentFromLineBreak from './calculateIndentFromLineBreak'
+import * as program from 'commander'
+import fs from 'fs-extra'
+import path from 'path'
+
 require('colors')
 const resolveRefs = require('json-refs').resolveRefs
 const YAML = require('js-yaml')
-const logErrorExit = require('../logErrorExit')
+const dd = require('../dd')
 
 export default class SwaggerChunk {
 
@@ -17,10 +20,10 @@ export default class SwaggerChunk {
    */
   constructor (program = {}) {
     if (!program.input) {
-      logErrorExit('No input provided')
+      dd('No input provided')
     } else {
       if (!fs.existsSync(program.input)) {
-        logErrorExit('File does not exist. (' + program.input + ')')
+        dd('File does not exist. (' + program.input + ')')
       }
     }
     this.mainJSON = ''
@@ -31,6 +34,7 @@ export default class SwaggerChunk {
     this.validateOff = program.validate_off || false
     this.destination = program.destination || false
     this.indentation = program.indentation || 4
+    this.originalIndentation = program.originalIndentation || 2
   }
 
   readJsonFile (file) {
@@ -44,14 +48,31 @@ export default class SwaggerChunk {
   packageJson () {
     return this.readJsonFile('./package.json')
   }
+
   parseMainLoaderOptions () {
     return {
       loaderOptions: {
         processContent: (res, callback) => {
+          let mixinStr = res.text.match(/(mixin\(.*\))/)
+          if(mixinStr){
+            let indent = calculateIndentFromLineBreak(res.text, mixinStr.index) + this.originalIndentation
+            let replaceVal = `
+`
+            let linePadding = ''
+            for(let i = 0 ; i < indent ; ++i){
+              linePadding += ' '
+            }
+            replaceVal += mixin(mixinStr[0], res.location, linePadding)
+            res.text = res.text.replace(
+              mixinStr[0],
+              replaceVal
+            )
+          }
+
           try {
             callback(null, YAML.safeLoad(res.text))
           } catch (e) {
-            logErrorExit({
+            dd({
               msg: 'Error parsing yml',
               e: e
             })
@@ -60,40 +81,37 @@ export default class SwaggerChunk {
       }
     }
   }
+
   parseMainRoot () {
     return YAML.safeLoad(fs.readFileSync(this.input).toString())
   }
+
   parseMain () {
     return new Promise((resolve) => {
       const root = this.parseMainRoot()
       const pwd = process.cwd()
       process.chdir(path.dirname(this.input))
       resolveRefs(root, this.parseMainLoaderOptions()).then((results) => {
-        this.mainJSON = this.swaggerChunkConversions(results.resolved)
-        this.validate()
-          .then(() => {
-            process.chdir(pwd)
-            return resolve(this.mainJSON)
+        this.swaggerChunkConversions(results.resolved)
+          .then((json) => {
+            this.mainJSON = json
+            this.validate()
+              .then(() => {
+                process.chdir(pwd)
+                return resolve(this.mainJSON)
+              })
+              .catch(dd)
           })
-          .catch((e) => {
-            logErrorExit({
-              msg: 'Error parsing output',
-              e: e
-            })
-          })
-      }).catch((e) => {
-        logErrorExit({
-          msg: 'Error resolving',
-          e: e
-        })
+          .catch(dd)
       })
+        .catch(dd)
     })
   }
 
   validate () {
     return new Promise((resolve, reject) => {
       if (!this.validateOff) {
-        var SwaggerParser = require('swagger-parser')
+        const SwaggerParser = require('swagger-parser')
         SwaggerParser.validate(this.cloneObject(this.mainJSON), {}, (e) => {
           if (e) {
             return reject(e.message)
@@ -111,13 +129,19 @@ export default class SwaggerChunk {
   }
 
   swaggerChunkConversions (swaggerDocument) {
-    if (this.hostReplacement) {
-      swaggerDocument.host = this.hostReplacement
-    }
-    if (this.cleanLeaf) {
-      swaggerDocument = this.cleanLeafs(swaggerDocument)
-    }
-    return swaggerDocument
+    return new Promise((resolve, reject) => {
+      try {
+        if (this.hostReplacement) {
+          swaggerDocument.host = this.hostReplacement
+        }
+        if (this.cleanLeaf) {
+          swaggerDocument = this.cleanLeafs(swaggerDocument)
+        }
+        return resolve(swaggerDocument)
+      } catch (e) {
+        reject(e)
+      }
+    })
   }
 
   lastChar (string) {
@@ -155,7 +179,7 @@ export default class SwaggerChunk {
         swagVersion = packageJson.version
       } else {
         // try and get the version from the yml file
-        return logErrorExit('No version provided and no version in the package.json')
+        return dd('No version provided and no version in the package.json')
       }
     }
     return '_' + swagVersion
@@ -170,7 +194,7 @@ export default class SwaggerChunk {
       fs.ensureDirSync(dir)
       return fs.writeFileSync(path.join(dir, this.getFileName(name, ext)), contents)
     } catch (e) {
-      logErrorExit({
+      dd({
         msg: 'Error writing file',
         e: e
       })

@@ -7,8 +7,8 @@ properties:
   precipitation:
     type: number
   temperature:
-    $ref: '#/definitions/UnitNumericAttributes'
+    $ref: '#/definitions/Units'
   windSpeed:
-    $ref: '#/definitions/UnitNumericAttributes'
+    $ref: '#/definitions/Units'
   windDirection:
-    $ref: '#/definitions/UnitNumericAttributes'
+    $ref: '#/definitions/Units'

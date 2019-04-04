@@ -1,6 +1,6 @@
 {
   "name": "swagger-chunk",
-  "version": "2.4.2",
+  "version": "2.4.3",
   "description": "Build and maintain large swagger API documentation files from small manageable chunks. Output yaml or json format. Instal skeleton swagger-chunk & scripts via command line --init",
   "keywords": [
     "swagger",
@@ -22,7 +22,8 @@
     "build:es5": "./node_modules/.bin/babel es6 -d es5",
     "build:readme:toc": "node ./node_modules/doctoc/doctoc.js .",
     "lint": "eslint *.js es6/",
-    "test": "npm run test:build-run && NODE_ENV=TEST jest && rm ./build/built*",
+    "test": "npm run test:build-run && npm run test:unit && rm ./build/built*",
+    "test:unit": "NODE_ENV=TEST jest",
     "test:build-run": "npm run build:es5 && node exampleUse.js",
     "test:uniqueOperationIds": "npm run build:es5 && node index.js -m -i src/index.yml",
     "prepublish": "npm run build:readme:toc && npm run test && npm run build:es5"
@@ -43,8 +44,9 @@
     "fs-extra": "^7.0.0",
     "inquirer": "^6.2.0",
     "js-yaml": "^3.12.0",
-    "json-refs": "^3.0.12",
+    "json-refs": "^3.0.13",
     "json2yaml": "^1.1.0",
+    "nunjucks": "^3.2.0",
     "recursive-readdir": "^2.2.2",
     "swagger-parser": "^6.0.2",
     "walker": "^1.0.7"

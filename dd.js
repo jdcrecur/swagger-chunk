@@ -1,4 +1,4 @@
 module.exports = (e) => {
-  console.log(process.cwd(), e)
+  console.dir(e, { depth: null });
   throw new Error(e)
 }

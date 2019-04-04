@@ -1,8 +1,16 @@
+GenericSearchMeta:
+  $ref: ./generic/searchMeta.yml
+
 Temperature:
-  $ref: ./temperature/Temperature.yml
+  $ref: ./temperature/model.yml
 
 Weather:
-  $ref: ./weather/Weather.yml
+  $ref: ./weather/model.yml
 
-UnitNumericAttributes:
-  $ref: ./unit/UnitNumericAttributes.yml
+Weathers: mixin('../mixins/pagination.yml', "'#/definitions/GenericSearchMeta'", "'#/definitions/Weather'")
+
+Unit:
+  $ref: ./unit/model.yml
+
+Units:
+  $ref: ./unit/models.yml

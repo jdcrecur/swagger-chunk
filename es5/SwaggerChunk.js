@@ -8,15 +8,36 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _mixin = require('./mixin');
+
+var _mixin2 = _interopRequireDefault(_mixin);
+
+var _calculateIndentFromLineBreak = require('./calculateIndentFromLineBreak');
+
+var _calculateIndentFromLineBreak2 = _interopRequireDefault(_calculateIndentFromLineBreak);
+
+var _commander = require('commander');
+
+var program = _interopRequireWildcard(_commander);
+
+var _fsExtra = require('fs-extra');
+
+var _fsExtra2 = _interopRequireDefault(_fsExtra);
+
+var _path = require('path');
+
+var _path2 = _interopRequireDefault(_path);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var program = require('commander');
-var fs = require('fs-extra');
-var path = require('path');
 require('colors');
 var resolveRefs = require('json-refs').resolveRefs;
 var YAML = require('js-yaml');
-var logErrorExit = require('../logErrorExit');
+var dd = require('../dd');
 
 var SwaggerChunk = function () {
 
@@ -33,10 +54,10 @@ var SwaggerChunk = function () {
     _classCallCheck(this, SwaggerChunk);
 
     if (!program.input) {
-      logErrorExit('No input provided');
+      dd('No input provided');
     } else {
-      if (!fs.existsSync(program.input)) {
-        logErrorExit('File does not exist. (' + program.input + ')');
+      if (!_fsExtra2.default.existsSync(program.input)) {
+        dd('File does not exist. (' + program.input + ')');
       }
     }
     this.mainJSON = '';
@@ -47,13 +68,14 @@ var SwaggerChunk = function () {
     this.validateOff = program.validate_off || false;
     this.destination = program.destination || false;
     this.indentation = program.indentation || 4;
+    this.originalIndentation = program.originalIndentation || 2;
   }
 
   _createClass(SwaggerChunk, [{
     key: 'readJsonFile',
     value: function readJsonFile(file) {
       try {
-        return JSON.parse(fs.readFileSync(file));
+        return JSON.parse(_fsExtra2.default.readFileSync(file));
       } catch (err) {
         return null;
       }
@@ -66,13 +88,27 @@ var SwaggerChunk = function () {
   }, {
     key: 'parseMainLoaderOptions',
     value: function parseMainLoaderOptions() {
+      var _this = this;
+
       return {
         loaderOptions: {
           processContent: function processContent(res, callback) {
+            var mixinStr = res.text.match(/(mixin\(.*\))/);
+            if (mixinStr) {
+              var indent = (0, _calculateIndentFromLineBreak2.default)(res.text, mixinStr.index) + _this.originalIndentation;
+              var replaceVal = '\n';
+              var linePadding = '';
+              for (var i = 0; i < indent; ++i) {
+                linePadding += ' ';
+              }
+              replaceVal += (0, _mixin2.default)(mixinStr[0], res.location, linePadding);
+              res.text = res.text.replace(mixinStr[0], replaceVal);
+            }
+
             try {
               callback(null, YAML.safeLoad(res.text));
             } catch (e) {
-              logErrorExit({
+              dd({
                 msg: 'Error parsing yml',
                 e: e
               });
@@ -84,45 +120,37 @@ var SwaggerChunk = function () {
   }, {
     key: 'parseMainRoot',
     value: function parseMainRoot() {
-      return YAML.safeLoad(fs.readFileSync(this.input).toString());
+      return YAML.safeLoad(_fsExtra2.default.readFileSync(this.input).toString());
     }
   }, {
     key: 'parseMain',
     value: function parseMain() {
-      var _this = this;
+      var _this2 = this;
 
       return new Promise(function (resolve) {
-        var root = _this.parseMainRoot();
+        var root = _this2.parseMainRoot();
         var pwd = process.cwd();
-        process.chdir(path.dirname(_this.input));
-        resolveRefs(root, _this.parseMainLoaderOptions()).then(function (results) {
-          _this.mainJSON = _this.swaggerChunkConversions(results.resolved);
-          _this.validate().then(function () {
-            process.chdir(pwd);
-            return resolve(_this.mainJSON);
-          }).catch(function (e) {
-            logErrorExit({
-              msg: 'Error parsing output',
-              e: e
-            });
-          });
-        }).catch(function (e) {
-          logErrorExit({
-            msg: 'Error resolving',
-            e: e
-          });
-        });
+        process.chdir(_path2.default.dirname(_this2.input));
+        resolveRefs(root, _this2.parseMainLoaderOptions()).then(function (results) {
+          _this2.swaggerChunkConversions(results.resolved).then(function (json) {
+            _this2.mainJSON = json;
+            _this2.validate().then(function () {
+              process.chdir(pwd);
+              return resolve(_this2.mainJSON);
+            }).catch(dd);
+          }).catch(dd);
+        }).catch(dd);
       });
     }
   }, {
     key: 'validate',
     value: function validate() {
-      var _this2 = this;
+      var _this3 = this;
 
       return new Promise(function (resolve, reject) {
-        if (!_this2.validateOff) {
+        if (!_this3.validateOff) {
           var SwaggerParser = require('swagger-parser');
-          SwaggerParser.validate(_this2.cloneObject(_this2.mainJSON), {}, function (e) {
+          SwaggerParser.validate(_this3.cloneObject(_this3.mainJSON), {}, function (e) {
             if (e) {
               return reject(e.message);
             }
@@ -141,13 +169,21 @@ var SwaggerChunk = function () {
   }, {
     key: 'swaggerChunkConversions',
     value: function swaggerChunkConversions(swaggerDocument) {
-      if (this.hostReplacement) {
-        swaggerDocument.host = this.hostReplacement;
-      }
-      if (this.cleanLeaf) {
-        swaggerDocument = this.cleanLeafs(swaggerDocument);
-      }
-      return swaggerDocument;
+      var _this4 = this;
+
+      return new Promise(function (resolve, reject) {
+        try {
+          if (_this4.hostReplacement) {
+            swaggerDocument.host = _this4.hostReplacement;
+          }
+          if (_this4.cleanLeaf) {
+            swaggerDocument = _this4.cleanLeafs(swaggerDocument);
+          }
+          return resolve(swaggerDocument);
+        } catch (e) {
+          reject(e);
+        }
+      });
     }
   }, {
     key: 'lastChar',
@@ -189,7 +225,7 @@ var SwaggerChunk = function () {
           swagVersion = packageJson.version;
         } else {
           // try and get the version from the yml file
-          return logErrorExit('No version provided and no version in the package.json');
+          return dd('No version provided and no version in the package.json');
         }
       }
       return '_' + swagVersion;
@@ -203,10 +239,10 @@ var SwaggerChunk = function () {
     key: 'writeFile',
     value: function writeFile(dir, name, ext, contents) {
       try {
-        fs.ensureDirSync(dir);
-        return fs.writeFileSync(path.join(dir, this.getFileName(name, ext)), contents);
+        _fsExtra2.default.ensureDirSync(dir);
+        return _fsExtra2.default.writeFileSync(_path2.default.join(dir, this.getFileName(name, ext)), contents);
       } catch (e) {
-        logErrorExit({
+        dd({
           msg: 'Error writing file',
           e: e
         });
@@ -215,28 +251,28 @@ var SwaggerChunk = function () {
   }, {
     key: 'toJsonFile',
     value: function toJsonFile(dir, name, ext) {
-      var _this3 = this;
+      var _this5 = this;
 
       this.destination = dir || false;
       ext = ext || 'json';
       return new Promise(function (resolve, reject) {
-        _this3.toJSON().then(function (json) {
-          if (!_this3.destination) {
-            console.log(JSON.stringify(_this3.mainJSON, null, 4));
+        _this5.toJSON().then(function (json) {
+          if (!_this5.destination) {
+            console.log(JSON.stringify(_this5.mainJSON, null, 4));
             return resolve();
           }
-          _this3.writeFile(dir, name, ext, JSON.stringify(json, null, _this3.indentation));
-          resolve('File written to: ' + path.join(dir, _this3.getFileName(name, ext)));
+          _this5.writeFile(dir, name, ext, JSON.stringify(json, null, _this5.indentation));
+          resolve('File written to: ' + _path2.default.join(dir, _this5.getFileName(name, ext)));
         }).catch(reject);
       });
     }
   }, {
     key: 'toJSON',
     value: function toJSON() {
-      var _this4 = this;
+      var _this6 = this;
 
       return new Promise(function (resolve, reject) {
-        _this4.parseMain().then(function (json) {
+        _this6.parseMain().then(function (json) {
           return resolve(json);
         }).catch(reject);
       });
@@ -244,29 +280,29 @@ var SwaggerChunk = function () {
   }, {
     key: 'toYamlFile',
     value: function toYamlFile(dir, name, ext) {
-      var _this5 = this;
+      var _this7 = this;
 
       ext = ext || 'yaml';
       this.destination = dir || false;
       return new Promise(function (resolve, reject) {
-        _this5.toYAML().then(function (yml) {
-          if (!_this5.destination) {
+        _this7.toYAML().then(function (yml) {
+          if (!_this7.destination) {
             console.log(yml);
             return resolve();
           }
-          _this5.writeFile(dir, name, ext, yml);
-          resolve('File written to: ' + path.join(dir, _this5.getFileName(name, ext)));
+          _this7.writeFile(dir, name, ext, yml);
+          resolve('File written to: ' + _path2.default.join(dir, _this7.getFileName(name, ext)));
         }).catch(reject);
       });
     }
   }, {
     key: 'toYAML',
     value: function toYAML() {
-      var _this6 = this;
+      var _this8 = this;
 
       return new Promise(function (resolve, reject) {
-        _this6.parseMain().then(function (json) {
-          return resolve(YAML.safeDump(json, _this6.indentation));
+        _this8.parseMain().then(function (json) {
+          return resolve(YAML.safeDump(json, _this8.indentation));
         }).catch(reject);
       });
     }
