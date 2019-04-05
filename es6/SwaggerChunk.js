@@ -4,7 +4,6 @@ import * as program from 'commander'
 import fs from 'fs-extra'
 import path from 'path'
 
-require('colors')
 const resolveRefs = require('json-refs').resolveRefs
 const YAML = require('js-yaml')
 const dd = require('../dd')

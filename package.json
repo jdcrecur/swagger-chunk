@@ -39,15 +39,12 @@
   },
   "homepage": "https://github.com/jdcrecur/swagger-chunk#readme",
   "dependencies": {
-    "colors": "^1.3.2",
     "commander": "^2.19.0",
     "fs-extra": "^7.0.0",
     "inquirer": "^6.2.0",
     "js-yaml": "^3.12.0",
     "json-refs": "^3.0.13",
-    "json2yaml": "^1.1.0",
     "nunjucks": "^3.2.0",
-    "recursive-readdir": "^2.2.2",
     "swagger-parser": "^6.0.2",
     "walker": "^1.0.7"
   },

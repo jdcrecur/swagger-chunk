@@ -41,7 +41,7 @@ if (srcAlreadyExists || buildAlreadyExists) {
 
   inquirer.prompt(questions).then((answers) => {
     if (answers.installConfirm) {
-      fs.copySync(__dirname + '/src', srcPath)
+      fs.copySync(__dirname + '/src_2', srcPath)
       fs.copySync(__dirname + '/build', buildPath)
       console.log('Completed: Installed swagger-chunk skeleton files to ' + srcPath)
       const name = answers.name
