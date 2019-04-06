@@ -5,7 +5,6 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Summary](#summary)
-- [Upgrade from v1 to v2](#upgrade-from-v1-to-v2)
 - [Examples](#examples)
 - [Install and use locally via cli](#install-and-use-locally-via-cli)
 - [How it works](#how-it-works)
