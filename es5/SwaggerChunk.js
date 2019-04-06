@@ -34,7 +34,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-require('colors');
 var resolveRefs = require('json-refs').resolveRefs;
 var YAML = require('js-yaml');
 var dd = require('../dd');
@@ -93,7 +92,8 @@ var SwaggerChunk = function () {
       return {
         loaderOptions: {
           processContent: function processContent(res, callback) {
-            var mixinStr = res.text.match(/(mixin\(.*\))/);
+            var mixinRegex = /'?(mixin\(.*\))'?/;
+            var mixinStr = res.text.match(mixinRegex);
             if (mixinStr) {
               var indent = (0, _calculateIndentFromLineBreak2.default)(res.text, mixinStr.index) + _this.originalIndentation;
               var replaceVal = '\n';
@@ -106,8 +106,10 @@ var SwaggerChunk = function () {
             }
 
             try {
-              callback(null, YAML.safeLoad(res.text));
+              var content = YAML.safeLoad(res.text);
+              callback(null, content);
             } catch (e) {
+              console.error('Error parsing');
               dd({
                 msg: 'Error parsing yml',
                 e: e
@@ -155,7 +157,7 @@ var SwaggerChunk = function () {
               return reject(e.message);
             }
             return resolve();
-          });
+          }).catch(reject);
         } else {
           return resolve();
         }

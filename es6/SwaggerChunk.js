@@ -4,7 +4,6 @@ import * as program from 'commander'
 import fs from 'fs-extra'
 import path from 'path'
 
-require('colors')
 const resolveRefs = require('json-refs').resolveRefs
 const YAML = require('js-yaml')
 const dd = require('../dd')
@@ -53,13 +52,14 @@ export default class SwaggerChunk {
     return {
       loaderOptions: {
         processContent: (res, callback) => {
-          let mixinStr = res.text.match(/(mixin\(.*\))/)
-          if(mixinStr){
+          let mixinRegex = /'?(mixin\(.*\))'?/
+          let mixinStr = res.text.match(mixinRegex)
+          if (mixinStr) {
             let indent = calculateIndentFromLineBreak(res.text, mixinStr.index) + this.originalIndentation
             let replaceVal = `
 `
             let linePadding = ''
-            for(let i = 0 ; i < indent ; ++i){
+            for (let i = 0; i < indent; ++i) {
               linePadding += ' '
             }
             replaceVal += mixin(mixinStr[0], res.location, linePadding)
@@ -70,8 +70,10 @@ export default class SwaggerChunk {
           }
 
           try {
-            callback(null, YAML.safeLoad(res.text))
+            const content = YAML.safeLoad(res.text)
+            callback(null, content)
           } catch (e) {
+            console.error('Error parsing')
             dd({
               msg: 'Error parsing yml',
               e: e
@@ -117,7 +119,7 @@ export default class SwaggerChunk {
             return reject(e.message)
           }
           return resolve()
-        })
+        }).catch(reject)
       } else {
         return resolve()
       }

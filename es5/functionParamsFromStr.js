@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -10,6 +10,8 @@ Object.defineProperty(exports, "__esModule", {
  * @returns {Array}
  */
 exports.default = function (string) {
+  if (string[0] === "'") string = string.substring(1, string.length);
+  if (string[string.length - 1] === "'") string = string.substring(0, string.length - 1);
   string = string.trim();
   string = string.replace('mixin(', '');
   string = string.substring(0, string.length - 1);
