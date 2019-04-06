@@ -1,6 +1,7 @@
 import path from 'path'
 import * as nunjucks from 'nunjucks'
 import functionParamsFromStr from './functionParamsFromStr'
+import fs from 'fs-extra'
 
 /**
  * mixin()
@@ -12,6 +13,7 @@ import functionParamsFromStr from './functionParamsFromStr'
 export default (val, currentFilePointer, linePadding) => {
   if (typeof val === 'string' && val.indexOf('mixin(') !== -1) {
     const params = functionParamsFromStr(val)
+    console.log('>>> ', val, params, params.length)
     let mixinPath = ''
     let vars = {}
     params.forEach((param, i) => {
@@ -21,11 +23,16 @@ export default (val, currentFilePointer, linePadding) => {
         mixinPath = param
       }
     })
-    nunjucks.configure({autoescape:false});
-    let rendered = nunjucks.render(
-      path.join(path.dirname(currentFilePointer), mixinPath),
-      vars
-    )
+    nunjucks.configure({ autoescape: false })
+    const renderPath = path.join(path.dirname(currentFilePointer), mixinPath)
+    if (!fs.pathExistsSync(renderPath)) {
+      console.error('Path not found while rendering nunjuck template: ' + renderPath)
+      console.error(mixinPath)
+      console.error( currentFilePointer)
+      throw new Error('Path not found when trying to render mixin: ' + renderPath)
+      process.exit(1)
+    }
+    let rendered = nunjucks.render(renderPath, vars)
     // inject the indentation
     let parts = rendered.split('\n')
     parts.forEach((part, i) => {

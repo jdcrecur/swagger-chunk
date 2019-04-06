@@ -1,4 +1,4 @@
-const json = require('../build/built_1.1.1')
+const json = require('../build/builtOA2_1.1.1')
 
 describe('Read to JSON', () => {
   it('It should be version 1.1.1', async () => {

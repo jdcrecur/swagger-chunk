@@ -35,7 +35,7 @@ var UniqueOperationIds = function () {
     }
     this.input = _path2.default.dirname(program.input);
     this.stripValue = program.strip_value || 'src/paths/';
-    this.indentation = program.indentation || 4;
+    this.indentation = program.indentation || 2;
   }
 
   _createClass(UniqueOperationIds, [{
@@ -72,7 +72,11 @@ var UniqueOperationIds = function () {
   }, {
     key: 'writeJsonToYaml',
     value: function writeJsonToYaml(filePath, json) {
-      return _fs2.default.writeFileSync(filePath, YAML.safeDump(json, this.indentation));
+      return _fs2.default.writeFileSync(filePath, YAML.safeDump(json, {
+        indent: this.indentation,
+        lineWidth: 1000,
+        noCompatMode: true
+      }));
     }
   }, {
     key: 'injectUniqueOperationId',

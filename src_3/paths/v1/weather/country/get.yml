@@ -2,19 +2,17 @@ tags:
   - weather
 summary: Weather data
 description: Weather for a given country for a given `ISO ALPHA-2 Code'
-operationId: src_2PathsV1WeatherCountryGet
-produces:
-  - application/json
+operationId: src_3PathsV1WeatherCountryGet
 parameters:
   - in: path
     name: country
     description: ISO "ALPHA-2 Code"
     required: true
-    type: string
+    schema:
+      type: string
 responses:
   '200':
-    description: Successful fecth
-    schema:
-      $ref: '#/definitions/Weather'
+    description: Successful fetch
+    content: 'mixin("../../../../mixins/response/json.yml", "#/components/schemas/Weather")'
   '404':
     description: Country not found

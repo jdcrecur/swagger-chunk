@@ -14,14 +14,14 @@ UniqueOperationIds
   .listAndInject()
   .then(() => {
     chunk
-      .toYamlFile('./build', 'built')
+      .toYamlFile('./build', 'builtOA2')
       .then(() => {
         chunk
           .toYamlFile()
           .then(() => {
             console.log('Building json')
             chunk
-              .toJsonFile('./build', 'built')
+              .toJsonFile('./build', 'builtOA2')
               .then(() => {
                 chunk.toJsonFile()
               }).catch(e => console.error(e))
@@ -31,5 +31,3 @@ UniqueOperationIds
   .catch(e => {
     console.error('Error injecting uniqueOperationIds: ', e)
   })
-
-

@@ -2,13 +2,10 @@ tags:
   - temperature
 summary: Temperature data
 description: Get the latest temperature
-operationId: src_2PathsV1TemperatureGet
-produces:
-  - application/json
+operationId: src_3PathsV1TemperatureGet
 responses:
   '200':
     description: Successful fetch
-    schema:
-      $ref: '#/definitions/Temperature'
+    content: 'mixin("../../../mixins/response/json.yml", "#/components/schemas/Temperature")'
   '404':
     description: Temp not found

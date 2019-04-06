@@ -15,7 +15,7 @@ export default class UniqueOperationIds {
     }
     this.input = path.dirname(program.input)
     this.stripValue = program.strip_value || 'src/paths/'
-    this.indentation = program.indentation || 4
+    this.indentation = program.indentation || 2
   }
 
   ucFirst (s) {
@@ -50,7 +50,11 @@ export default class UniqueOperationIds {
       filePath,
       YAML.safeDump(
         json,
-        this.indentation
+        {
+          indent: this.indentation,
+          lineWidth: 1000,
+          noCompatMode: true
+        }
       )
     )
   }

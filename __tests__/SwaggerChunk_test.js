@@ -16,7 +16,7 @@ describe('Load the construct', () => {
   it('should not fail with a simple import point', (done) => {
     tryOrFail(() => {
       SC = new SwaggerChunk({
-        input: './src/index.yml'
+        input: './src_2/index.yml'
       })
     }, done)
   })
@@ -24,7 +24,7 @@ describe('Load the construct', () => {
   it('should not fail with a simple import point and exclude_version', (done) => {
     tryOrFail(() => {
       SC = new SwaggerChunk({
-        input: './src/index.yml',
+        input: './src_2/index.yml',
         exclude_version: true
       })
     }, done)
