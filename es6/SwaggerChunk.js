@@ -52,7 +52,7 @@ export default class SwaggerChunk {
     return {
       loaderOptions: {
         processContent: (res, callback) => {
-          let mixinRegex = /\'?(mixin\(.*\))\'?/
+          let mixinRegex = /'?(mixin\(.*\))'?/
           let mixinStr = res.text.match(mixinRegex)
           if (mixinStr) {
             let indent = calculateIndentFromLineBreak(res.text, mixinStr.index) + this.originalIndentation

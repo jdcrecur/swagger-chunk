@@ -13,7 +13,6 @@ import fs from 'fs-extra'
 export default (val, currentFilePointer, linePadding) => {
   if (typeof val === 'string' && val.indexOf('mixin(') !== -1) {
     const params = functionParamsFromStr(val)
-    console.log('>>> ', val, params, params.length)
     let mixinPath = ''
     let vars = {}
     params.forEach((param, i) => {
@@ -30,7 +29,6 @@ export default (val, currentFilePointer, linePadding) => {
       console.error(mixinPath)
       console.error( currentFilePointer)
       throw new Error('Path not found when trying to render mixin: ' + renderPath)
-      process.exit(1)
     }
     let rendered = nunjucks.render(renderPath, vars)
     // inject the indentation

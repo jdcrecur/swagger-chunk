@@ -92,7 +92,7 @@ var SwaggerChunk = function () {
       return {
         loaderOptions: {
           processContent: function processContent(res, callback) {
-            var mixinRegex = /\'?(mixin\(.*\))\'?/;
+            var mixinRegex = /'?(mixin\(.*\))'?/;
             var mixinStr = res.text.match(mixinRegex);
             if (mixinStr) {
               var indent = (0, _calculateIndentFromLineBreak2.default)(res.text, mixinStr.index) + _this.originalIndentation;

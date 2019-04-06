@@ -1,13 +1,14 @@
 const SwaggerChunk = require('./es5/SwaggerChunk.js')
 
 const chunk = new SwaggerChunk({
-  input: './src_3/index.yml',
+  input: './srcOA3/index.yml',
 })
 
 const uniqueOperationIds = require('./es5/UniqueOperationIds')
 const program = {
   make_unique_operation_ids: true,
-  input: './src_3/index.yml',
+  strip_value: 'srcOA3/paths/',
+  input: './srcOA3/index.yml',
 }
 
 const UniqueOperationIds = new uniqueOperationIds(program)

@@ -2,7 +2,9 @@ tags:
   - temperature
 summary: Temperature data
 description: Create a new temperature record.
-operationId: src_3PathsV1TemperaturePost
+operationId: v1TemperaturePost
+produces:
+  - application/json
 parameters:
   - in: body
     name: temp
@@ -17,6 +19,7 @@ parameters:
 responses:
   '200':
     description: Successful temp creation
-    content: 'mixin("../../../mixins/response/json.yml", "#/components/schemas/Temperature")'
+    schema:
+      $ref: '#/definitions/Temperature'
   '422':
     description: Invalid form data provided

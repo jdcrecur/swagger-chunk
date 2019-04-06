@@ -34,7 +34,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 exports.default = function (val, currentFilePointer, linePadding) {
   if (typeof val === 'string' && val.indexOf('mixin(') !== -1) {
     var params = (0, _functionParamsFromStr2.default)(val);
-    console.log('>>> ', val, params, params.length);
     var mixinPath = '';
     var vars = {};
     params.forEach(function (param, i) {
@@ -51,7 +50,6 @@ exports.default = function (val, currentFilePointer, linePadding) {
       console.error(mixinPath);
       console.error(currentFilePointer);
       throw new Error('Path not found when trying to render mixin: ' + renderPath);
-      process.exit(1);
     }
     var rendered = nunjucks.render(renderPath, vars);
     // inject the indentation

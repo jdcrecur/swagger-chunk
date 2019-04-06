@@ -18,15 +18,10 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Summary
-Swagger-chunk allows you to build and maintain large swagger 2 API documentation files from small manageable chunks, importing and re-using. Perfect for [Documentation-Driven Development](https://gist.github.com/zsup/9434452), and when used in conjunction with [swagger-codegen](https://swagger.io/swagger-codegen/) makes for a powerful methodology to both start and maintain any project.
-
-Before writing the compiled swagger file to disk the object is validated using [openapi-schema-validation](https://www.npmjs.com/package/openapi-schema-validation), any validation issues are written to the terminal and the process halted. You may bypass validation, please see the available command line arguments.
-
-## Upgrade from v1 to v2
-The base paths are now relative to the input file. If you are using this tool and upgrade to v2 ensure the main entry point uses files relative to itself unlike relative to the package.json file as in v1.
+Bundle many OpenAPI 2|3 files together into one. Please see the srcOA2 and srcOA3 for examples.
 
 ## Examples
-For a full example please view the example folder within the swagger-chunk repo.: [https://github.com/jdcrecur/swagger-chunk/tree/master/src](https://github.com/jdcrecur/swagger-chunk/tree/master/src)
+For a full example please view the example folder within the swagger-chunk repo.: [https://github.com/jdcrecur/swagger-chunk/tree/master/srcOA3](https://github.com/jdcrecur/swagger-chunk/tree/master/srcOA3)
 
 ## Install and use locally via cli
 Installing:
@@ -98,7 +93,7 @@ Using [swagger-chunk](https://www.npmjs.com/package/swagger-chunk) you can use t
  ```
  $ref: ./definitions/Weather.yml
  ```
- 
+
 ### Initialise skeleton swagger-chunk files
 You can kick start your swagger documentation code base by running the below command. The command will result in a new sub directory from the `current working directory` the command is run from:
 

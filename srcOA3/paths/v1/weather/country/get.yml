@@ -2,7 +2,7 @@ tags:
   - weather
 summary: Weather data
 description: Weather for a given country for a given `ISO ALPHA-2 Code'
-operationId: src_3PathsV1WeatherCountryGet
+operationId: v1WeatherCountryGet
 parameters:
   - in: path
     name: country
