@@ -41,7 +41,7 @@
   "homepage": "https://github.com/jdcrecur/swagger-chunk#readme",
   "dependencies": {
     "commander": "^2.19.0",
-    "fs-extra": "^7.0.0",
+    "fs-extra": "^8.0.0",
     "inquirer": "^6.2.0",
     "js-yaml": "^3.12.0",
     "json-refs": "^3.0.13",
